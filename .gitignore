@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+.env
+.env.*
+
+# Model weights and caches
+models/
+checkpoints/
+adapters/
+outputs/
+.cache/
+huggingface/
+wandb/
+runs/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+
+# Habitat data and generated artifacts
+data/
+datasets/
+logs/
+results/
+videos/
+*.mp4
+*.gif
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
