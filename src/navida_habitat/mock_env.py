@@ -24,6 +24,18 @@ class MockEnv:
     success: bool = False
     executed_actions: list[HabitatAction] = field(default_factory=list)
 
+    @property
+    def position(self) -> dict[str, float]:
+        """Return the existing two-dimensional mock position."""
+
+        return {"x": self.position_x, "z": self.position_z}
+
+    @property
+    def rotation_yaw(self) -> float:
+        """Return yaw using the generic environment interface name."""
+
+        return self.yaw_degrees
+
     def execute(self, action: HabitatAction) -> None:
         """Execute one 25 cm, 15 degree, or stop atomic action."""
 

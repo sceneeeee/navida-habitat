@@ -4,9 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-
-class BackendExhaustedError(RuntimeError):
-    """Raised when a mock backend has no configured output left."""
+from navida_habitat.episode_interfaces import BackendExhaustedError
 
 
 class MockBackend:

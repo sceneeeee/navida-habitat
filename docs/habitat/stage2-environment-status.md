@@ -7,11 +7,20 @@ Stage 2 已完成：
 - 2A：本地环境与版本审计
 - 2B：Habitat-Sim 0.2.4 与 Habitat-Lab 0.2.4 安装
 - 2C：真实场景、NavMesh、RGB 传感器与原子动作 smoke test
-
-尚未完成：
-
 - 2D：Habitat 环境接入 mock episode loop
-- 2E：自动化测试、日志、文档与 PR 验收
+- 2E：自动化测试、日志与文档验收（PR 尚未创建）
+
+当前 Stage 2 pipeline 为：
+
+~~~text
+MockBackend
+→ EpisodeRunner
+→ HabitatEnvAdapter
+→ Habitat-Sim real scene
+→ JSONL
+~~~
+
+该 pipeline 是 execution demo，不是 navigation success evaluation。当前没有正式 episode goal，STOP 只设置 `done=true`，不会伪造成功，`success` 始终保持 `false`。
 
 ## 固定版本
 
@@ -31,13 +40,10 @@ Stage 2 已完成：
 
 ### Python 环境
 
-- Conda environment：`navida_habitat_sim_gui_test`
-- Python：`3.9`
-- Gym：`0.22.0`
-- Hydra Core：`1.2.0`
-- OmegaConf：`2.2.3`
-- OpenCV：`4.8.1`
-- NumPy：`1.26.4`
+- Conda environment：`navida_habitat`
+- Python：`3.10.20`
+- Habitat-Lab：以 editable 方式安装
+- Habitat-Sim：使用本地 GLX 源码构建的 Python 包
 
 ## WSL2 渲染问题
 
@@ -115,6 +121,12 @@ conda run --no-capture-output \
 ~~~bash
 export PYTHONPATH="$HOME/SURF/_external/habitat-sim-0.2.4-glx/src_python"
 export DISPLAY=:0
+~~~
+
+运行本仓库脚本时还需将仓库的 `src` 目录加入 `PYTHONPATH`，且 Habitat-Sim 路径保持在前：
+
+~~~bash
+export PYTHONPATH="$HOME/SURF/_external/habitat-sim-0.2.4-glx/src_python:$PWD/src"
 ~~~
 
 Habitat-Lab 使用 editable install，源码路径为：
@@ -233,14 +245,27 @@ REAL_SCENE_SMOKE_OK
 
 这些内容保存在 `~/SURF/_external`、`~/SURF/datasets` 或 `/tmp`。
 
-## 下一步
+## Stage 2D/2E 实现结果
 
-在 `feat/habitat-mock-integration` 分支实现：
+- `EpisodeRunner` 依赖最小 backend/environment Protocol，不再依赖具体 `MockEnv` 类型。
+- `HabitatEnvAdapter` 对 Habitat 依赖使用 lazy import，只配置 RGB 传感器。
+- `move_forward` 为 0.25 m，`turn_left` 和 `turn_right` 均为 15°。
+- STOP 由 adapter 处理，不调用 Habitat-Sim 中不存在的默认 STOP action。
+- adapter 暴露真实 `position`、`rotation_yaw` 和当前 uint8 RGBA observation。
+- adapter 提供幂等 `close()` 和 context manager，运行脚本在异常路径也会关闭 simulator。
+- JSONL 保留 Stage 1 字段，同时提供 `parsed_action`、`rotation_yaw` 和 `termination` 字段名。
+- 普通测试使用纯 Python fake simulator，不要求 Habitat、DISPLAY 或真实场景。
+- `tests/test_habitat_integration.py` 默认跳过；只有显式设置 `NAVIDA_HABITAT_RUN_INTEGRATION=1` 和 `NAVIDA_HABITAT_SCENE` 才运行真实场景。
 
-1. `HabitatEnvAdapter`
-2. RGB observation 与 agent pose 接口
-3. NaVIDA 原子动作到 Habitat action 的映射
-4. mock backend、strict parser 与 Habitat-Sim episode loop
-5. JSONL episode 日志
-6. STOP、invalid output、backend exhaustion 和 max steps 测试
-7. Stage 2 自动化验收脚本与使用文档
+真实运行入口：
+
+~~~bash
+python scripts/run_habitat_mock_episode.py \
+  --scene /path/to/scene.glb \
+  --output logs/habitat/stage2_demo.jsonl \
+  --episode-id stage2-demo-001 \
+  --instruction "Walk forward and turn left." \
+  --max-steps 10
+~~~
+
+当前 backend 仍为 `MockBackend`，尚未加载 NaVIDA 模型。下一阶段是在保持相同 runner/environment seam 和科学协议约束的前提下接入官方 checkpoint。
