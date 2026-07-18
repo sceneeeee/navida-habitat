@@ -54,6 +54,31 @@ class MockEnvTests(unittest.TestCase):
 
 
 class EpisodeLogTests(unittest.TestCase):
+    def test_serialized_log_adds_stage2_names_without_removing_stage1_names(
+        self,
+    ) -> None:
+        step_log = EpisodeStepLog(
+            episode_id="episode-1",
+            step=0,
+            instruction="walk ahead",
+            raw_model_output="stop",
+            parsed_sub_chunks=[{"kind": "stop", "amount": None}],
+            atomic_actions=["stop"],
+            executed_actions=["stop"],
+            position={"x": 1.0, "y": 2.0, "z": 3.0},
+            yaw_degrees=15.0,
+            done=True,
+            success=False,
+            termination_reason="stop",
+            error=None,
+        )
+
+        serialized = step_log.to_dict()
+
+        self.assertEqual(serialized["parsed_action"], serialized["parsed_sub_chunks"])
+        self.assertEqual(serialized["rotation_yaw"], serialized["yaw_degrees"])
+        self.assertEqual(serialized["termination"], serialized["termination_reason"])
+
     def test_writes_one_valid_json_object_per_step_with_required_fields(self) -> None:
         step_log = EpisodeStepLog(
             episode_id="episode-1",
@@ -87,13 +112,16 @@ class EpisodeLogTests(unittest.TestCase):
                 "instruction",
                 "raw_model_output",
                 "parsed_sub_chunks",
+                "parsed_action",
                 "atomic_actions",
                 "executed_actions",
                 "position",
                 "yaw_degrees",
+                "rotation_yaw",
                 "done",
                 "success",
                 "termination_reason",
+                "termination",
                 "error",
             },
         )
@@ -110,6 +138,41 @@ class EpisodeLogTests(unittest.TestCase):
 
 
 class EpisodeRunnerTests(unittest.TestCase):
+    def test_accepts_backend_and_environment_protocol_implementations(self) -> None:
+        class ProtocolBackend:
+            def infer(self, *, instruction: str, step: int) -> str:
+                del instruction, step
+                return "stop"
+
+        class ProtocolEnvironment:
+            def __init__(self) -> None:
+                self.position = {"x": 1.0, "z": 2.0}
+                self.rotation_yaw = 5.0
+                self.done = False
+                self.success = False
+
+            def execute(self, action: HabitatAction) -> None:
+                self.done = action is HabitatAction.STOP
+
+        environment = ProtocolEnvironment()
+        runner = EpisodeRunner(
+            backend=ProtocolBackend(),
+            environment=environment,
+            max_steps=1,
+        )
+
+        summary = runner.run(
+            episode_id="protocol-episode",
+            instruction="stop",
+        )
+
+        self.assertEqual(summary.termination_reason, "stop")
+        self.assertTrue(summary.done)
+        self.assertFalse(summary.success)
+        self.assertEqual(runner.step_logs[0].executed_actions, ["stop"])
+        self.assertEqual(runner.step_logs[0].position, {"x": 1.0, "z": 2.0})
+        self.assertEqual(runner.step_logs[0].yaw_degrees, 5.0)
+
     def test_executes_multiple_sub_chunks_from_one_model_decision(self) -> None:
         environment = MockEnv()
         summary = EpisodeRunner(

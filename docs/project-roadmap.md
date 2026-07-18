@@ -424,17 +424,12 @@ history RGB + current RGB + instruction
 
 ## 6. 当前状态与下一步
 
-当前已完成 **Stage 0：基础脚手架**。仓库已经采用 Python 3.10 和 `src` layout，实现 strict action chunk parser、原子动作展开及对应 `unittest`；目前尚未安装 Habitat、加载模型或下载数据集。
+当前已完成：
 
-当前唯一下一阶段是 **Stage 1：纯 Python mock episode loop**。
+- **Stage 0：基础脚手架**——Python 3.10、`src` layout、strict parser 和原子动作展开。
+- **Stage 1：纯 Python mock episode loop**——确定性 backend、mock environment、episode runner 和 JSONL 日志。
+- **Stage 2：Habitat + mock backend**——真实 Habitat-Sim adapter、RGB observation、真实场景动作执行、日志和自动化验收。
 
-Stage 1 计划涉及以下文件：
+Stage 2 当前仍使用 `MockBackend`，只验证软件 execution pipeline，不评价 NaVIDA、VLN navigation success 或泛化性能。没有正式 navigation goal 时，STOP 仅终止 episode，`success` 保持 `false`。
 
-- `src/navida_habitat/mock_backend.py`
-- `src/navida_habitat/mock_env.py`
-- `src/navida_habitat/episode_runner.py`
-- `src/navida_habitat/episode_log.py`
-- `scripts/run_mock_episode.py`
-- `tests/test_mock_episode.py`
-
-这些文件目前尚未实现，本次任务不创建它们。进入 Stage 1 后，应只围绕 mock episode 软件闭环实施和验收，不提前安装 Habitat 或加载 NaVIDA。
+当前下一阶段是 **Stage 3：Habitat + 官方 NaVIDA**。进入 Stage 3 前，应继续保持 backend/environment seam、lazy Habitat import、无 fallback 的 episode 语义，以及 `official_repro` 与 `paper_pure` 的协议隔离。

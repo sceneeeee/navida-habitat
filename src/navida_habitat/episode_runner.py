@@ -6,12 +6,16 @@ from pathlib import Path
 
 from navida_habitat.action_chunk import (
     ActionParseError,
+    HabitatAction,
     expand_action_chunk,
     parse_action_chunk,
 )
+from navida_habitat.episode_interfaces import (
+    BackendExhaustedError,
+    BackendProtocol,
+    EnvironmentProtocol,
+)
 from navida_habitat.episode_log import EpisodeStepLog, EpisodeSummary, write_jsonl
-from navida_habitat.mock_backend import BackendExhaustedError, MockBackend
-from navida_habitat.mock_env import MockEnv
 
 
 class EpisodeRunner:
@@ -20,8 +24,8 @@ class EpisodeRunner:
     def __init__(
         self,
         *,
-        backend: MockBackend,
-        environment: MockEnv,
+        backend: BackendProtocol,
+        environment: EnvironmentProtocol,
         max_steps: int,
         log_path: str | Path | None = None,
     ) -> None:
@@ -102,16 +106,14 @@ class EpisodeRunner:
                 }
                 for sub_chunk in action_chunk.sub_chunks
             ]
-            first_action_index = len(self.environment.executed_actions)
             atomic_actions = ()
+            executed_actions: list[HabitatAction] = []
             try:
                 atomic_actions = expand_action_chunk(action_chunk)
                 for action in atomic_actions:
                     self.environment.execute(action)
+                    executed_actions.append(action)
             except Exception as error:
-                executed_actions = self.environment.executed_actions[
-                    first_action_index:
-                ]
                 return self._terminate_with_error(
                     episode_id=episode_id,
                     step=step,
@@ -126,9 +128,6 @@ class EpisodeRunner:
                     error_message=self._format_runtime_error(error),
                 )
 
-            executed_actions = self.environment.executed_actions[
-                first_action_index:
-            ]
             termination_reason = None
             if self.environment.done:
                 termination_reason = "stop"
@@ -209,10 +208,10 @@ class EpisodeRunner:
                 atomic_actions=atomic_actions,
                 executed_actions=executed_actions,
                 position={
-                    "x": self.environment.position_x,
-                    "z": self.environment.position_z,
+                    key: float(value)
+                    for key, value in self.environment.position.items()
                 },
-                yaw_degrees=self.environment.yaw_degrees,
+                yaw_degrees=self.environment.rotation_yaw,
                 done=self.environment.done,
                 success=self.environment.success,
                 termination_reason=termination_reason,

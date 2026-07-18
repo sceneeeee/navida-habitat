@@ -127,12 +127,19 @@ BF16 官方基线和大规模训练使用显存更大的云 GPU。
 
 ## 当前状态
 
-已完成 Stage 0 基础脚手架：
+当前已完成：
 
-- 建立独立的 Python 3.10 Conda 环境。
-- 实现严格的 NaVIDA action chunk parser 和原子动作展开。
-- 当前 7 个单元测试全部通过。
-- 尚未安装 Habitat、PyTorch、Transformers 或下载模型与数据集。
+- Stage 0：Python 3.10 `src` layout、严格 action chunk parser 和原子动作展开。
+- Stage 1：`MockBackend`、纯 Python mock environment、可终止的 episode loop 和 JSONL 日志。
+- Stage 2：真实 Habitat-Sim environment adapter、RGB observation、真实 agent pose 日志、原子动作映射和 real-scene integration。
+
+Stage 2 当前仍使用确定性的 `MockBackend`，尚未接入 NaVIDA checkpoint 或任何模型推理。真实场景 demo 只证明以下 execution pipeline 可以闭环运行：
+
+`MockBackend → EpisodeRunner → HabitatEnvAdapter → Habitat-Sim → JSONL`
+
+该 demo 没有正式 navigation goal；STOP 只表示执行结束，日志中的 `success` 保持 `false`。因此 Stage 2 结果不代表 VLN navigation success、模型能力或泛化性能。
+
+真实 Habitat 依赖采用 lazy import。普通 parser、mock loop 和单元测试不要求安装 Habitat、配置 `DISPLAY` 或提供场景文件；real-scene smoke test 需要显式提供本地 Habitat-Sim Python 路径、渲染环境和场景路径。
 
 ## 许可证说明
 

@@ -1,4 +1,4 @@
-"""Serializable episode logs for the pure-Python mock loop."""
+"""Serializable episode logs shared by mock and Habitat environments."""
 
 from __future__ import annotations
 
@@ -27,9 +27,13 @@ class EpisodeStepLog:
     error: str | None
 
     def to_dict(self) -> dict[str, object]:
-        """Return a JSON-serializable representation."""
+        """Return a representation with Stage 1 and Stage 2 field names."""
 
-        return asdict(self)
+        serialized = asdict(self)
+        serialized["parsed_action"] = serialized["parsed_sub_chunks"]
+        serialized["rotation_yaw"] = serialized["yaw_degrees"]
+        serialized["termination"] = serialized["termination_reason"]
+        return serialized
 
 
 @dataclass(frozen=True, slots=True)
