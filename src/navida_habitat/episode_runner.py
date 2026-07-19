@@ -113,6 +113,10 @@ class EpisodeRunner:
                 for action in atomic_actions:
                     self.environment.execute(action)
                     executed_actions.append(action)
+
+                    observe = getattr(self.backend, "observe", None)
+                    if callable(observe):
+                        observe()
             except Exception as error:
                 return self._terminate_with_error(
                     episode_id=episode_id,
