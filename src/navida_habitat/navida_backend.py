@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from dataclasses import dataclass
 from typing import Any, Protocol
 
 from PIL import Image
 
 from navida_habitat.frame_history import FrameHistory
-from navida_habitat.model_runtime import (
-    NaVIDAGenerationResult,
-)
+from navida_habitat.model_runtime import NaVIDAGenerationResult
 
 
 class RGBObservationProvider(Protocol):
@@ -32,6 +31,33 @@ class NaVIDARuntimeProtocol(Protocol):
         current_image: Image.Image,
     ) -> NaVIDAGenerationResult:
         """Generate one raw action response."""
+
+
+@dataclass(frozen=True, slots=True)
+class NaVIDADecisionRecord:
+    """Profile one model decision and its visual context."""
+
+    step: int
+    stored_frame_count: int
+    available_history_count: int
+    sampled_history_count: int
+    result: NaVIDAGenerationResult
+
+    def to_dict(self) -> dict[str, object]:
+        """Return a JSON-serializable representation."""
+
+        return {
+            "step": self.step,
+            "stored_frame_count": self.stored_frame_count,
+            "available_history_count": self.available_history_count,
+            "sampled_history_count": self.sampled_history_count,
+            "raw_output": self.result.raw_output,
+            "input_token_count": self.result.input_token_count,
+            "generated_token_count": self.result.generated_token_count,
+            "latency_seconds": self.result.latency_seconds,
+            "peak_allocated_gib": self.result.peak_allocated_gib,
+            "peak_reserved_gib": self.result.peak_reserved_gib,
+        }
 
 
 def observation_to_rgb_image(
@@ -69,6 +95,7 @@ class NaVIDABackend:
             sample_count=history_sample_count,
         )
         self.last_result: NaVIDAGenerationResult | None = None
+        self.decision_records: list[NaVIDADecisionRecord] = []
 
     def observe(self) -> None:
         """Capture the provider's current RGB observation."""
@@ -87,17 +114,35 @@ class NaVIDABackend:
 
         if step == 0:
             self.frame_history.clear()
+            self.decision_records.clear()
+            self.last_result = None
             self.observe()
         elif len(self.frame_history) == 0:
             raise RuntimeError(
                 "no observation was captured before this decision step"
             )
 
+        history_images = self.frame_history.sample_before_latest()
+        current_image = self.frame_history.latest
+
         result = self.runtime.generate(
             instruction=instruction,
-            history_images=self.frame_history.sample_before_latest(),
-            current_image=self.frame_history.latest,
+            history_images=history_images,
+            current_image=current_image,
+        )
+
+        record = NaVIDADecisionRecord(
+            step=step,
+            stored_frame_count=len(self.frame_history),
+            available_history_count=max(
+                0,
+                len(self.frame_history) - 1,
+            ),
+            sampled_history_count=len(history_images),
+            result=result,
         )
 
         self.last_result = result
+        self.decision_records.append(record)
+
         return result.raw_output

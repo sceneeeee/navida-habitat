@@ -115,7 +115,7 @@ class EpisodeRunner:
                     executed_actions.append(action)
 
                     observe = getattr(self.backend, "observe", None)
-                    if callable(observe):
+                    if callable(observe) and not self.environment.done:
                         observe()
             except Exception as error:
                 return self._terminate_with_error(

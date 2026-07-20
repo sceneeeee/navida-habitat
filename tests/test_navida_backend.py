@@ -256,7 +256,7 @@ class NaVIDABackendTest(unittest.TestCase):
 
 
 class EpisodeObservationHookTest(unittest.TestCase):
-    def test_runner_observes_after_every_atomic_action(self) -> None:
+    def test_runner_observes_after_movement_actions(self) -> None:
         backend = ObservingBackend()
         environment = MinimalEnvironment()
 
@@ -277,7 +277,7 @@ class EpisodeObservationHookTest(unittest.TestCase):
                 HabitatAction.STOP,
             ],
         )
-        self.assertEqual(backend.observe_calls, 3)
+        self.assertEqual(backend.observe_calls, 2)
         self.assertEqual(summary.termination_reason, "stop")
 
 
