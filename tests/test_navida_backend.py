@@ -145,6 +145,34 @@ class FrameHistoryTest(unittest.TestCase):
 
 
 class NaVIDABackendTest(unittest.TestCase):
+    def test_reset_clears_episode_state_without_replacing_runtime(self) -> None:
+        provider = FakeObservationProvider(
+            solid_rgba(255, 0, 0)
+        )
+        runtime = FakeRuntime()
+        backend = NaVIDABackend(
+            runtime=runtime,
+            observation_provider=provider,
+        )
+
+        backend.infer(
+            instruction="First episode.",
+            step=0,
+        )
+        provider.rgb_observation = solid_rgba(0, 255, 0)
+        backend.observe()
+
+        self.assertEqual(len(backend.frame_history), 2)
+        self.assertEqual(len(backend.decision_records), 1)
+        self.assertIsNotNone(backend.last_result)
+
+        backend.reset()
+
+        self.assertEqual(len(backend.frame_history), 0)
+        self.assertEqual(backend.decision_records, [])
+        self.assertIsNone(backend.last_result)
+        self.assertIs(backend.runtime, runtime)
+
     def test_first_step_uses_current_without_history(self) -> None:
         provider = FakeObservationProvider(
             solid_rgba(255, 0, 0)
