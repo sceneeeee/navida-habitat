@@ -140,12 +140,59 @@ src/navida_habitat/frame_history.py
 src/navida_habitat/navida_backend.py
     Habitat RGB → NaVIDA 推理 → 决策记录。
 
+src/navida_habitat/policy.py
+    面向外部 evaluator 的 paper_pure Official NaVIDA Policy API。
+
 src/navida_habitat/episode_runner.py
     parser、动作执行、终止状态和 JSONL episode 日志。
 
 src/navida_habitat/habitat_env.py
     Habitat-Sim environment adapter、RGB observation 和 agent state。
 ```
+
+## Official NaVIDA Policy Python API
+
+外部 evaluator 可以注入一个实现 `NaVIDARuntimeProtocol` 的 runtime，按
+episode 生命周期调用 Policy。Policy 只接收 RGB、指令、决策步和 episode ID，
+不持有 Habitat 环境，也不执行动作或计算评估指标。
+
+```python
+from navida_habitat import OfficialNaVIDAPolicy
+from navida_habitat.action_chunk import HabitatAction
+
+policy = OfficialNaVIDAPolicy(runtime=runtime, protocol="paper_pure")
+
+try:
+    policy.reset("episode-1")
+    policy.observe(initial_rgb)
+
+    decision = policy.act(
+        instruction="Walk through the doorway.",
+        decision_step=0,
+    )
+
+    if decision.valid:
+        for action in decision.atomic_actions:
+            evaluator.execute(action)
+            if evaluator.is_done():
+                break
+            policy.observe(evaluator.current_rgb)
+    else:
+        evaluator.record_invalid_output(decision.to_dict())
+finally:
+    policy.close()
+```
+
+`decision.atomic_actions` 是 `tuple[HabitatAction, ...]`，Policy 默认只展开
+模型输出的前两个 sub-chunks。严格 parser 失败时，decision 会保留完整
+`raw_output` 和 parser 错误，同时返回空的 `parsed_sub_chunks` 与
+`atomic_actions`，不产生 STOP 或移动 fallback。
+
+同一个 Policy/runtime 可以跨多个 episode 复用；每次 `reset()` 会清除历史帧、
+决策记录、上一条生成结果和当前 RGB，但不会重新初始化模型。`close()` 可重复调用，
+只会在 runtime 提供 `close()` 时调用一次。当前公共 API 只正式支持
+`protocol="paper_pure"`；`official_repro` 尚未实现并会显式抛出
+`NotImplementedError`。
 
 ## 已完成阶段
 

@@ -97,6 +97,13 @@ class NaVIDABackend:
         self.last_result: NaVIDAGenerationResult | None = None
         self.decision_records: list[NaVIDADecisionRecord] = []
 
+    def reset(self) -> None:
+        """Clear all state associated with the current episode."""
+
+        self.frame_history.clear()
+        self.decision_records.clear()
+        self.last_result = None
+
     def observe(self) -> None:
         """Capture the provider's current RGB observation."""
 
@@ -113,9 +120,7 @@ class NaVIDABackend:
             raise ValueError("step must not be negative")
 
         if step == 0:
-            self.frame_history.clear()
-            self.decision_records.clear()
-            self.last_result = None
+            self.reset()
             self.observe()
         elif len(self.frame_history) == 0:
             raise RuntimeError(
