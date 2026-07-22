@@ -242,6 +242,28 @@ class OfficialNaVIDAPolicyTest(unittest.TestCase):
                 HabitatAction.TURN_RIGHT,
             ),
         )
+        self.assertEqual(
+            decision.metadata["parsed_sub_chunks"],
+            [
+                {"kind": "forward", "amount": 50},
+                {"kind": "turn_right", "amount": 30},
+                {"kind": "turn_left", "amount": 15},
+            ],
+        )
+        self.assertEqual(decision.metadata["parsed_sub_chunk_count"], 3)
+        self.assertEqual(decision.metadata["max_executed_sub_chunks"], 2)
+        self.assertEqual(decision.metadata["executed_sub_chunk_count"], 2)
+        self.assertEqual(decision.metadata["ignored_sub_chunk_count"], 1)
+        self.assertEqual(
+            decision.metadata["atomic_actions"],
+            [
+                "move_forward",
+                "move_forward",
+                "turn_right",
+                "turn_right",
+            ],
+        )
+        self.assertEqual(decision.metadata["atomic_action_count"], 4)
 
     def test_stop_is_preserved_in_atomic_actions(self) -> None:
         policy = OfficialNaVIDAPolicy(
@@ -400,6 +422,19 @@ class OfficialNaVIDAPolicyTest(unittest.TestCase):
                 "latency_seconds": 0.25,
                 "peak_allocated_gib": 1.5,
                 "peak_reserved_gib": 2.0,
+                "parsed_sub_chunks": [
+                    {"kind": "forward", "amount": 25},
+                    {"kind": "turn_left", "amount": 15},
+                ],
+                "parsed_sub_chunk_count": 2,
+                "max_executed_sub_chunks": 2,
+                "executed_sub_chunk_count": 2,
+                "ignored_sub_chunk_count": 0,
+                "atomic_actions": [
+                    "move_forward",
+                    "turn_left",
+                ],
+                "atomic_action_count": 2,
             },
         )
 

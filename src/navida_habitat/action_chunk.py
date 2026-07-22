@@ -7,6 +7,9 @@ from dataclasses import dataclass
 from enum import Enum
 
 
+DEFAULT_MAX_SUB_CHUNKS = 2
+
+
 class ActionParseError(ValueError):
     """Raised when model output does not follow the action chunk grammar."""
 
@@ -119,7 +122,9 @@ def _parse_amount(
 
 
 def expand_action_chunk(
-    action_chunk: ActionChunk, *, max_sub_chunks: int = 2
+    action_chunk: ActionChunk,
+    *,
+    max_sub_chunks: int = DEFAULT_MAX_SUB_CHUNKS,
 ) -> tuple[HabitatAction, ...]:
     """Expand parsed sub-chunks into Habitat's atomic actions."""
 

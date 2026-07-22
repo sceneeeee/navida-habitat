@@ -8,6 +8,7 @@ from typing import Any
 from navida_habitat.action_chunk import (
     ActionParseError,
     ActionSubChunk,
+    DEFAULT_MAX_SUB_CHUNKS,
     HabitatAction,
     expand_action_chunk,
     parse_action_chunk,
@@ -169,6 +170,33 @@ class OfficialNaVIDAPolicy:
             atomic_actions = expand_action_chunk(action_chunk)
             valid = True
             error_message = None
+
+        executed_sub_chunk_count = min(
+            len(parsed_sub_chunks),
+            DEFAULT_MAX_SUB_CHUNKS,
+        )
+        metadata.update(
+            {
+                "parsed_sub_chunks": [
+                    {
+                        "kind": sub_chunk.kind.value,
+                        "amount": sub_chunk.amount,
+                    }
+                    for sub_chunk in parsed_sub_chunks
+                ],
+                "parsed_sub_chunk_count": len(parsed_sub_chunks),
+                "max_executed_sub_chunks": DEFAULT_MAX_SUB_CHUNKS,
+                "executed_sub_chunk_count": executed_sub_chunk_count,
+                "ignored_sub_chunk_count": (
+                    len(parsed_sub_chunks) - executed_sub_chunk_count
+                ),
+                "atomic_actions": [
+                    action.value
+                    for action in atomic_actions
+                ],
+                "atomic_action_count": len(atomic_actions),
+            }
+        )
 
         return NaVIDAPolicyDecision(
             episode_id=self._episode_id,
