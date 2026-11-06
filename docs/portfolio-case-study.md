@@ -88,6 +88,10 @@ Do not attribute upstream NaVIDA model design, training, public checkpoint or th
 - The model, datasets, scenes and recorded videos are not distributed with this repository.
 - License permissions must be checked separately for the model, upstream code, third-party simulation frameworks and this repository; no root repository LICENSE has been selected.
 
+## Post-SURF personal repository consolidation (2026-11)
+
+After the SURF project concluded, the personal repository extracted the relevant evaluator application and original tests from the [July 23 merged team snapshot](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6). The aim is **independent maintainability and credible portfolio demonstration**, not retroactively treating team framework code as individual SURF authorship. The extracted model/evaluator code now lives in one source repository but still runs as **two separately configured Python processes**. Source file hashes were checked after import; post-migration Habitat/GPU tests are **not yet run**. Attribution, licensing and acceptance gates are recorded in [evaluator provenance](evaluator-provenance.md) and [migration acceptance checklist](evaluator-migration-acceptance.md).
+
 ## Reproducibility and further work
 
 Standard-library regression command (requires dependencies already present):
