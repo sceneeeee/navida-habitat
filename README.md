@@ -98,7 +98,7 @@ Read the [full evaluator setup and test guidance](habitat_vln/README.md) before 
 PYTHONPATH=src python -m unittest discover -s tests -v
 
 # Lightweight model-server ↔ evaluator-client HTTP contract (fake model, no scene)
-PYTHONPATH=src python -m unittest tests.test_evaluator_http_contract -v
+PYTHONPATH=src python -m unittest discover -s tests -p 'test_evaluator_http_contract.py' -v
 
 # Evaluator environment (Python 3.9 with historical dependencies)
 python -m unittest discover -s test -p 'test_grounded_demo_episode.py' -v
