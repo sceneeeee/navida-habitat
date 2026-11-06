@@ -1,8 +1,8 @@
 # navida-habitat
 
-> **SURF closeout (2026-11-07 documentation):** The SURF research project has concluded. This repository preserves the validated engineering integration of the NaVIDA checkpoint and Habitat simulator. **No official instruction-aligned VLN benchmark and no physical-robot deployment were completed.** The five-step historical smoke test is engineering evidence only, not a navigation success result.
+> **SURF closeout (2026-11-07 documentation):** The SURF research project has concluded. This repository preserves the validated engineering integration of the NaVIDA checkpoint and Habitat simulator. **No official VLN benchmark or physical-robot deployment was completed.** A five-step historical smoke test established engineering connectivity; a subsequent goal-grounded 80-step test-scene episode in the paired evaluator repo **failed to reach its navigation goal** ([RtimesC/habitat-lab PR #5](https://github.com/RtimesC/habitat-lab/pull/5)). Neither is a formal benchmark.
 >
-> **Reports:** [SURF closeout (中文)](docs/surf-closeout.zh-CN.md) · [English engineering case study](docs/portfolio-case-study.md) · [Validation evidence](docs/validation-report.md) · [HTTP API](docs/api-contract.md) · [Demo checklist](docs/demo-recording-checklist.md).
+> **Reports:** [SURF closeout (中文)](docs/surf-closeout.zh-CN.md) · [English engineering case study](docs/portfolio-case-study.md) · [Git contribution audit](docs/contribution-audit.md) · [Validation evidence](docs/validation-report.md) · [HTTP API](docs/api-contract.md) · [Demo checklist](docs/demo-recording-checklist.md).
 
 
 在 Habitat 中运行官方 NaVIDA checkpoint 的独立推理服务与严格 `paper_pure` 协议实现。
@@ -329,7 +329,7 @@ python -m pytest -q
 
 R2R episode 绑定 MP3D 的 scene ID、起点、朝向、目标和参考路径，因此 HM3D 结果不能与 R2R 论文指标直接比较。
 
-SURF 期间原计划先完成 HM3D 工程 demo；该指令对齐的完整演示和 MP3D/R2R 正式 benchmark 在结项时均未完成。以后若重新开展研究，应单独说明为 post-SURF follow-up，并先核实所需数据集权限。
+SURF 期间曾计划 HM3D 工程 Demo；实际上，协作仓库 [RtimesC/habitat-lab PR #5](https://github.com/RtimesC/habitat-lab/pull/5) 于 2026-07-23 在内置 **skokloster-castle 测试场景**完成了一个目标对齐的 80 步真实模型 episode，**NaVIDA 失败（success=0、SPL=0，最终目标距离约 8.620 m）**。它不是 HM3D 或 MP3D/R2R 正式基准；原定的 HM3D 扩展及正式 benchmark 均未完成。未来实验应独立标记为 post-SURF follow-up，并遵守场景与数据集权限。
 
 数据集、场景、模型权重、训练图像和评估视频不得提交到普通 Git。
 
