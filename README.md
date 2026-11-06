@@ -303,11 +303,11 @@ python -m pytest -q
 - 与 Habitat 客户端的 5-step 端到端闭环
 - 合并后独立端口启动和 `/health` 验证
 
-## 数据集与 Demo 路线
+## 历史数据集与 Demo 路线（SURF 已结项）
 
-### 当前：HM3D 工程 Demo
+### 原定：HM3D 工程 Demo（未完成）
 
-当前优先使用 HM3D 或其他合法 Habitat 场景，制作 instruction-aligned 工程 demo：
+SURF 开发期间计划使用 HM3D 或其他合法 Habitat 场景制作 instruction-aligned 工程 demo，拟包括：
 
 - 为场景定义明确起点、朝向和目标。
 - 编写与实际目标和路径对应的自然语言指令。
@@ -317,7 +317,7 @@ python -m pytest -q
 
 该结果用于验证工程闭环和观察跨场景泛化，不作为官方 R2R/RxR benchmark。
 
-### 后续：MP3D + R2R VLN-CE
+### 原定后续：MP3D + R2R VLN-CE（未开展正式评测）
 
 论文级或正式 benchmark 阶段再接入：
 
