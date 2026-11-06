@@ -1,6 +1,6 @@
 # NaVIDA–Habitat | SURF Visual-Language Navigation Engineering
 
-[中文结项报告](docs/surf-closeout.zh-CN.md) · [Evaluator quickstart](habitat_vln/README.md) · [Engineering case study](docs/portfolio-case-study.md) · [Contribution audit](docs/contribution-audit.md) · [Validation evidence](docs/validation-report.md)
+[中文版 README](README.zh-CN.md) · [中文结项报告](docs/surf-closeout.zh-CN.md) · [Evaluator quickstart](habitat_vln/README.md) · [Engineering case study](docs/portfolio-case-study.md) · [Contribution audit](docs/contribution-audit.md) · [Validation evidence](docs/validation-report.md)
 
 **Status:** SURF concluded (2026). The original model-server / Habitat integration has historical real-checkpoint validation. This personal repository now contains an **extracted SURF evaluator application** as well as the model server. **The consolidated file layout has not yet been rerun with the live checkpoint and Habitat scene**, so the post-migration end-to-end path remains pending fresh verification.
 
