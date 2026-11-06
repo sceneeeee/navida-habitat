@@ -1,6 +1,6 @@
 # navida-habitat 项目开发路线图（历史规划，SURF 已结项）
 
-> **结项更新（2026-11-07）：** SURF 项目已结束。下文主要保留历史研究计划，**不代表所有阶段都已完成**。实际交付与验证范围见 [SURF 结项报告](surf-closeout.zh-CN.md)。Stage 3 已完成模型/仿真接口和有限步 smoke test，**但原 Stage 3 验收清单中的完整指令对齐 episode、小批量导航评估未全部实现**；Stage 4–8 未作为本次 SURF 的已完成交付。
+> **结项更新（2026-11-07）：** SURF 项目已结束。下文主要保留历史研究计划，**不代表所有阶段都已完成**。实际交付与验证范围见 [SURF 结项报告](surf-closeout.zh-CN.md)。Stage 3 已完成模型/仿真接口与有限步 smoke test，且协作仓库中完成了一个**80 步目标对齐但导航失败**的 episode，**但小批量导航评估及原 Stage 3 全部验收条件未满足**；Stage 4–8 未作为本次 SURF 的已完成交付。
 
 ## 1. 项目最终目标
 
@@ -431,7 +431,7 @@ history RGB + current RGB + instruction
 | Stage 0 | 完成 | src 布局、parser、atomic actions、基础测试 |
 | Stage 1 | 完成 | mock backend/episode runner、JSONL 与终止逻辑 |
 | Stage 2 | 完成工程接入 | Habitat-Sim 真实场景 RGB / 动作 adapter、mock smoke；参见 PR #2 |
-| Stage 3 | **工程集成部分完成** | 官方 checkpoint、Policy、HTTP 服务与有限步模型/Habitat smoke，见 PR #3–#6；完整指令对齐 episode、小批量评估和全部验收项尚未完成 |
+| Stage 3 | **工程集成已完成，原阶段验收未全部完成** | 官方 checkpoint、Policy、HTTP 服务与有限步模型/Habitat smoke，见本仓库 PR #3–#6；协作仓库 [PR #5](https://github.com/RtimesC/habitat-lab/pull/5) 完成目标对齐的 80 步真实模型 episode，NaVIDA 停在错误位置、success=0；小批量评估和全部验收项未完成 |
 | Stage 4–5 | 未完成 | 无正式 R2R VLN-CE benchmark、scene-disjoint batch evaluation 或系统化指标结论 |
 | Stage 6–8 | 未完成 | 无 Jetson 资源验证、ROS 2 桥接或 FrogBot/车辆实机验证 |
 
