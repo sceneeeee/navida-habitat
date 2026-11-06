@@ -1,4 +1,6 @@
-# Stage 2 Habitat 环境状态记录
+# Stage 2 Habitat 环境状态记录（历史记录）
+
+> **后续状态注记（2026-11-07）：** 本文记录 Stage 2 当时的环境与测试过程。文中的“PR 尚未创建”和“下一阶段 Stage 3”等句子是历史状态；此后 [PR #2](https://github.com/sceneeeee/navida-habitat/pull/2) 已于 2026-07-18 合并，[PR #3](https://github.com/sceneeeee/navida-habitat/pull/3) 至 [PR #6](https://github.com/sceneeeee/navida-habitat/pull/6) 随后补齐官方 checkpoint、Policy 与 HTTP 工程集成。SURF 现已结项，正式 VLN benchmark 与实机实验未完成。见 [结项报告](../surf-closeout.zh-CN.md)。**以下历史正文保留原样。**
 
 ## 当前状态
 
