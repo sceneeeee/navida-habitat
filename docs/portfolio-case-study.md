@@ -1,7 +1,7 @@
 # SURF Project Case Study — NaVIDA–Habitat Integration
 
 **Project type:** Team research / robotics AI systems engineering (SURF)  
-**Status:** SURF concluded; engineering integration validated in simulation; formal navigation evaluation not completed  
+**Status:** SURF concluded; integration validated, one goal-grounded single-scene experiment completed with a negative navigation result; formal VLN benchmark not completed  
 **Repository:** [sceneeeee/navida-habitat](https://github.com/sceneeeee/navida-habitat)  
 **Evaluator-side integration:** [RtimesC/habitat-lab](https://github.com/RtimesC/habitat-lab)
 
@@ -55,6 +55,8 @@ The parser is intentionally stricter than some behaviors of the upstream evaluat
 | Checkpoint runtime and RGB history | [model_runtime.py](../src/navida_habitat/model_runtime.py), [frame_history.py](../src/navida_habitat/frame_history.py), [PR #3](https://github.com/sceneeeee/navida-habitat/pull/3) |
 | Policy-facing episode lifecycle | [policy.py](../src/navida_habitat/policy.py), [PR #5](https://github.com/sceneeeee/navida-habitat/pull/5) |
 | Stateful HTTP inference service | [http_service.py](../src/navida_habitat/http_service.py), [PR #6](https://github.com/sceneeeee/navida-habitat/pull/6) |
+| Paired evaluator-side HTTP adapter | [RtimesC/habitat-lab PR #4](https://github.com/RtimesC/habitat-lab/pull/4), authored by sceneeeee | 
+| Grounded Habitat single-episode demo | [RtimesC/habitat-lab PR #5](https://github.com/RtimesC/habitat-lab/pull/5), authored by sceneeeee |
 
 ## Evidence and results
 
@@ -65,20 +67,21 @@ The parser is intentionally stricter than some behaviors of the upstream evaluat
 - **GPU memory:** approximately **3.12 GiB peak allocated GPU memory** in the recorded real-checkpoint smoke test. This is not peak reserved memory or full-system consumption.
 - **Simulator integration:** one randomly selected PointNav test episode executed **five simulator steps** through the two-process model/HTTP/Habitat path. The recorded steps produced valid actions and trajectory/media artifacts without HTTP errors, fallback actions, invalid outputs or collisions.
 - **Auditability:** model output, parser metadata, decision-step identity and queued-step reuse could be traced through the evaluator integration.
+- **Grounded single-scene demo (paired repository PR #5):** a deterministic test-scene episode with a goal-linked instruction was executed for **80 simulator steps** using the real checkpoint; the model stopped at the wrong location (**NaVIDA success=0.0, SPL=0.0, final goal distance ~8.620 m**). A separate Oracle control completed the episode (success=1.0, SPL=1.0); this validates the goal/scene/evaluator setup, **not NaVIDA performance**. The PR reports 54 tests passed, one skipped and genuine trajectory/media outputs.
 
-**What these results do not show:** the manual navigation instruction was not aligned with the PointNav task goal. The five-step smoke test therefore demonstrates **engineering connectivity**, not language-grounded target completion, official Success Rate (SR), Success weighted by Path Length (SPL), or generalization.
+**Evidence distinction:** the five-step smoke test used a manually supplied instruction **not aligned** with its random PointNav goal, so it only establishes engineering connectivity. The later **80-step grounded demo did use a goal-linked instruction**, but NaVIDA **failed the task**. Neither observation is a formal R2R/RxR benchmark or a generalization estimate.
 
 See [the validation report](validation-report.md) and [PR #6](https://github.com/sceneeeee/navida-habitat/pull/6) for evidence boundaries.
 
 ## Contribution attribution
 
-The GitHub record contains merged contributions under the sceneeeee account in [PRs #1–#6](https://github.com/sceneeeee/navida-habitat/pulls?q=is%3Apr+is%3Amerged). The repository-level work covers the integration components above. **Individual authorship, supervisor/team contribution and the division of work across the paired evaluator repository should be verified against the SURF team's records before using first-person ownership statements in a CV or graduate application.**
+All 17 historical main-branch commits in this repository were authored as **evenS**, linked to GitHub **sceneeeee**, and all model-side [PRs #1–#6](https://github.com/sceneeeee/navida-habitat/pulls?q=is%3Apr+is%3Amerged) were submitted from that account. In the separate RtimesC team evaluator repository, the same account also authored [PR #4 (HTTP adapter)](https://github.com/RtimesC/habitat-lab/pull/4) and [PR #5 (grounded demo)](https://github.com/RtimesC/habitat-lab/pull/5). Thus, the evidence supports responsibility for these specific model-side and evaluator-side integration deliverables. It **does not** prove that every line was manually typed or that all surrounding Habitat evaluator code was written by the same person. Other team contributions remain separate. See the [commit-by-commit attribution audit](contribution-audit.md).
 
 Do not attribute upstream NaVIDA model design, training, public checkpoint or the Habitat frameworks to this repository's author.
 
 ## Scope and limitations
 
-- SURF ended before a standardized, instruction-aligned VLN evaluation was produced.
+- One goal-grounded single-scene engineering episode was completed but failed; SURF ended without a standardized instruction-aligned VLN benchmark or a successful navigation result in the documented grounded run.
 - No official R2R VLN-CE or RxR benchmark result is documented here.
 - No FrogBot, ROS 2, Jetson or other physical-robot deployment is claimed.
 - The service is intended for localhost research integration, not hardened production use.
@@ -99,6 +102,6 @@ Post-SURF simulation evaluation or an authorized future FrogBot experiment would
 
 ## Suggested résumé wording
 
-> Developed a stateful NaVIDA–Habitat inference integration during a SURF research project, connecting 4-bit checkpoint inference, RGB frame history, strict action parsing and a localhost HTTP action queue; validated the model-to-simulator path with a five-step real-checkpoint smoke test and historical regression tests (87 passed, one optional integration test skipped).
+> Built and validated the model-side NaVIDA–Habitat integration and authored the paired evaluator-side HTTP adapter and grounded simulation demo; implemented 4-bit inference, RGB history, strict action parsing and a stateful action queue. Demonstrated a five-step connectivity smoke test and diagnosed an 80-step goal-grounded run where NaVIDA stopped at the wrong location (success=0), with clear separation from official VLN benchmark claims.
 
-Use this only after confirming that the described engineering work matches your actual individual role within the SURF team.
+This wording is supported by account-linked merged PRs; review team work division and any AI-assisted development details before claiming exclusively hand-written implementation.
