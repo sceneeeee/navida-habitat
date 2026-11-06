@@ -2,7 +2,7 @@
 
 **Source frozen:** RtimesC/habitat-lab merge of PR #5 at `835ac41e9ecf82c2c13b4bdf2f6747aef70860d6`.
 
-The GitHub migration imports the historical `habitat_vln/` package subset and selected tests; no GPU or Habitat execution happened in the remote GitHub editing environment.
+The GitHub migration imports **35** historical `habitat_vln/` application and selected `test/` source/test files (258,210 bytes), all verified by exact matching Git blob hashes against the historical source snapshot. No GPU or Habitat execution happened in the remote GitHub editing environment. The new fake-policy cross-repository HTTP contract test is **not yet run**; do not claim its success until executed.
 
 ## Acceptance gates
 
