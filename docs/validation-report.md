@@ -2,6 +2,8 @@
 
 Compiled: 2026-11-07. This is a retrospective audit, not a new experiment.
 
+**Personal-repository consolidation update:** An evaluator application subset was copied unchanged from the RtimesC/habitat-lab merged PR #5 snapshot (835ac41e, July 23); 35 extracted source/test files matched their source Git blob hashes after the import. This is **file-integrity validation only**. Neither the new HTTP contract test nor the imported evaluator tests nor a real checkpoint/Habitat episode has been executed in the consolidated repository. See [migration acceptance checklist](evaluator-migration-acceptance.md).
+
 ## Historical evidence
 
 | Category | Historical observation | Source | Interpretation |
