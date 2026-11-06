@@ -11,7 +11,7 @@ The SURF research project used two GitHub repositories:
 
 For an independently maintainable engineering portfolio, this repository carries an **extracted, historical subset of the SURF custom evaluator layer** under `habitat_vln/` and its relevant historical tests under `test/`. It does **not** incorporate Meta's complete Habitat-Lab source distribution, team-owned Git history, dataset files, checkpoints or simulation media. The external Habitat-Lab and Habitat-Sim installations remain required dependencies.
 
-The extracted source files were originally located at **the same relative paths** in the historical RtimesC/habitat-lab commit referenced above. The migration preserves the historical code for auditability; new modifications must be distinguished from those upstream files.
+The extracted source files were originally located at **the same relative paths** in the historical RtimesC/habitat-lab commit referenced above. The [machine-readable import manifest](evaluator-source-manifest.json) lists each of the **35 unchanged files**, original Git blob SHA and byte size. Cross-repository hash matching was verified when the manifest was created; it does not assert tests or simulations passed after migration. The migration preserves the historical code for auditability; new modifications must be distinguished from those upstream files.
 
 ## Authorship and credit
 
