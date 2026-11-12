@@ -1,6 +1,7 @@
 """Run Official NaVIDA on the grounded Habitat test-scene episode."""
 
 import argparse
+import math
 from pathlib import Path
 from typing import Optional, Sequence
 
@@ -88,8 +89,8 @@ def _validate_args(args: argparse.Namespace) -> None:
     if args.video_fps is not None:
         positive_values["--video-fps"] = args.video_fps
     for name, value in positive_values.items():
-        if value <= 0:
-            raise ValueError(f"{name} must be greater than zero")
+        if not math.isfinite(value) or value <= 0:
+            raise ValueError(f"{name} must be finite and greater than zero")
 
 
 def main(argv: Optional[Sequence[str]] = None) -> str:
@@ -128,6 +129,7 @@ def main(argv: Optional[Sequence[str]] = None) -> str:
         dataset_path=args.dataset_path,
         scenes_dir=args.scenes_dir,
         gpu_device_id=args.gpu_device_id,
+        paper_pure=True,
     )
     try:
         policy = OfficialNaVIDAHTTPPolicy(

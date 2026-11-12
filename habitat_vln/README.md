@@ -2,7 +2,7 @@
 
 This directory holds the **Habitat evaluator side** of the historical NaVIDA SURF integration. It was extracted from [RtimesC/habitat-lab @ 835ac41e](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6) for independent **personal portfolio maintenance**, with [source attribution and MIT license](../docs/evaluator-provenance.md).
 
-**Not a complete fork of Meta Habitat-Lab.** Install Habitat-Lab/Habitat-Sim externally. The archived application's entrypoints, setup requirements and some dependencies remain tied to the historical 2026-07 versions.
+**Not a complete fork of Meta Habitat-Lab.** Install Habitat-Lab/Habitat-Sim externally. The application's setup requirements and some dependencies remain tied to the historical 2026-07 versions. Post-import changes are recorded in the provenance document.
 
 ## Two-process architecture
 
@@ -81,3 +81,24 @@ These may require Habitat and CV dependencies. Record real results, dependency f
 **Historical PR #5 result:** one goal-aligned test scene, 80 simulator steps, NaVIDA model STOP at wrong location, success=0, SPL=0, final distance ~8.620m. A separate Oracle succeeded. These are historical **single-episode** engineering observations, not new results or standard VLN benchmark metrics.
 
 See [SURF validation report](../docs/validation-report.md) and [contribution audit](../docs/contribution-audit.md).
+
+
+## Post-import configuration checks (2026-11-12)
+
+Both the ordinary CLI's `--official-navida-http` path and the Grounded Demo
+explicitly request 0.25m forward / 15-degree turn configuration and check it
+before Habitat construction. Ordinary non-NaVIDA and Oracle paths retain their
+external config values. This aligns config with server action expansion; it is
+**not a measurement of actual simulator motion**.
+
+A lightweight configuration suite can run with Python 3.10, NumPy and Pillow:
+
+```bash
+PYTHONPATH=src python -m unittest discover -s tests -p 'test_evaluator_configuration.py' -v
+```
+
+It uses explicit Fake Config / environment / runner boundaries and tests both
+CLI routes, default preservation, rejection of failed injection and invalid
+frequencies. It does not install or validate Habitat. CI also runs this bounded
+suite and triggers on `test/**`; it still does not run the Python 3.9 Habitat
+regressions. The separate real-Habitat acceptance gates remain open.

@@ -32,12 +32,17 @@ class HabitatEnvironmentConfig:
     dataset_path: Optional[str] = None
     scenes_dir: Optional[str] = None
     gpu_device_id: Optional[int] = None
+    paper_pure: bool = False
 
 
 def create_habitat_env(settings):
     """Create Habitat with dataset and visual-sensor overrides applied."""
     config = habitat.get_config(settings.task_config)
     with read_write(config):
+        if settings.paper_pure:
+            # Match the server's 25 cm / 15 degree atomic action expansion.
+            config.habitat.simulator.forward_step_size = 0.25
+            config.habitat.simulator.turn_angle = 15
         if settings.dataset_split is not None:
             config.habitat.dataset.split = settings.dataset_split
         if settings.dataset_path is not None:
@@ -61,6 +66,12 @@ def create_habitat_env(settings):
         sensors.depth_sensor.width = settings.width
         sensors.depth_sensor.height = settings.height
         sensors.depth_sensor.hfov = settings.hfov
+    if settings.paper_pure:
+        simulator = config.habitat.simulator
+        if simulator.forward_step_size != 0.25 or simulator.turn_angle != 15:
+            raise ValueError(
+                "paper_pure requires forward_step_size=0.25 and turn_angle=15"
+            )
     return habitat.Env(config=config)
 
 
@@ -74,6 +85,7 @@ def build_env(
     dataset_path=None,
     scenes_dir=None,
     gpu_device_id=None,
+    paper_pure=False,
 ):
     """Compatibility wrapper around :func:`create_habitat_env`."""
     return create_habitat_env(
@@ -87,6 +99,7 @@ def build_env(
             dataset_path=dataset_path,
             scenes_dir=scenes_dir,
             gpu_device_id=gpu_device_id,
+            paper_pure=paper_pure,
         )
     )
 

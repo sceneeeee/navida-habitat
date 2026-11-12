@@ -11,7 +11,7 @@ The SURF research project used two GitHub repositories:
 
 For an independently maintainable engineering portfolio, this repository carries an **extracted, historical subset of the SURF custom evaluator layer** under `habitat_vln/` and its relevant historical tests under `test/`. It does **not** incorporate Meta's complete Habitat-Lab source distribution, team-owned Git history, dataset files, checkpoints or simulation media. The external Habitat-Lab and Habitat-Sim installations remain required dependencies.
 
-The extracted source files were originally located at **the same relative paths** in the historical RtimesC/habitat-lab commit referenced above. The [machine-readable import manifest](evaluator-source-manifest.json) lists each of the **35 unchanged files**, original Git blob SHA and byte size. Cross-repository hash matching was verified when the manifest was created; it does not assert tests or simulations passed after migration. The migration preserves the historical code for auditability; new modifications must be distinguished from those upstream files.
+The extracted source files were originally located at **the same relative paths** in the historical RtimesC/habitat-lab commit referenced above. The [machine-readable import manifest](evaluator-source-manifest.json) lists each of the **35 files unchanged at initial import**, original Git blob SHA and byte size. Cross-repository hash matching was verified when the manifest was created; it does not assert tests or simulations passed after migration. The migration preserves the historical code for auditability; new modifications must be distinguished from those upstream files.
 
 ## Authorship and credit
 
@@ -37,3 +37,29 @@ The extracted source files were originally located at **the same relative paths*
 The two processes intentionally retain different Python environments: model server **Python 3.10**; historical Habitat evaluator **Python 3.9**. The HTTP API is the integration seam. Avoid forcing a single Python environment by changing production dependencies without explicit compatibility tests.
 
 When source files are changed, preserve license/attribution and document where changes occur after the historical snapshot.
+
+
+## Post-import fixes (2026-11-12, PR #8)
+
+The manifest retains the original snapshot hashes as an **import baseline**;
+its `downstream_modified_files` lists files that now differ. It is no longer a
+claim that all 35 current files are byte-identical. MIT and team attribution
+remain unchanged.
+
+- `habitat_vln/envs/habitat_env.py`: opt-in `paper_pure` configuration sets
+  `forward_step_size=0.25` metres and `turn_angle=15` degrees, then checks the
+  effective config before constructing Habitat. Other policies retain their
+  configured geometry. The frozen upstream SimulatorConfig default was 10
+  degrees, inconsistent with the server's 15-degree atomic action expansion.
+- `habitat_vln/habitat_vln_nav.py` and
+  `habitat_vln/demos/run_grounded_navida_demo.py`: explicitly opt both Official
+  HTTP entrypoints into that configuration; the demo rejects nonfinite inputs.
+- `habitat_vln/runtime/scheduler.py`: reject nonfinite/nonpositive frequencies,
+  including direct deadline-advance calls, before entering the scheduling loop.
+- New `tests/test_evaluator_configuration.py` exercises configuration and CLI
+  wiring with explicitly substituted Habitat imports/environment/runner
+  boundaries. It executes no simulator and cannot measure actual motion.
+
+These are downstream engineering fixes, not changes to the historical SURF
+results. Real Python 3.9/Habitat-Sim 0.3.3 configuration composition, renderer,
+scene execution and measured 0.25m/15-degree motion remain acceptance work.

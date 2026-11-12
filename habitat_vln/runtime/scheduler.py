@@ -1,5 +1,6 @@
 """Inference scheduling for layered advisor and joint controller modes."""
 
+import math
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -33,8 +34,8 @@ def validate_frequencies(args):
         "--joint-hz": args.joint_hz,
     }
     for name, value in values.items():
-        if value <= 0.0:
-            raise ValueError(f"{name} must be greater than zero")
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be finite and greater than zero")
     if args.frequency_mode == "layered" and args.inference_hz > args.vision_hz:
         raise ValueError("--inference-hz cannot exceed --vision-hz in layered mode")
     if args.frequency_mode == "layered" and args.qwen_role != "advisor":
@@ -51,6 +52,8 @@ def inference_is_due(logical_time_sec, next_inference_time_sec):
 
 def advance_inference_time(next_inference_time_sec, inference_hz, logical_time_sec):
     """Advance the inference deadline beyond the current logical time."""
+    if not math.isfinite(inference_hz) or inference_hz <= 0.0:
+        raise ValueError("inference_hz must be finite and greater than zero")
     period_sec = 1.0 / inference_hz
     while next_inference_time_sec <= logical_time_sec + 1e-9:
         next_inference_time_sec += period_sec

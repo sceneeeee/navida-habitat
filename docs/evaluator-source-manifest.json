@@ -5,7 +5,7 @@
   "destination_repository": "sceneeeee/navida-habitat",
   "destination_branch": "feat/surf-evaluator-consolidation",
   "generated_on": "2026-11-07",
-  "note": "Only historical evaluator source/test files verified unchanged by Git blob SHA. Excludes new documentation/CI and the post-migration cross-process test. Git SHA proves byte identity, not runtime compatibility.",
+  "note": "Historical import baseline: original Git blob SHAs and sizes at import, not current working-tree hashes. See downstream_modified_files and evaluator-provenance.md for post-import changes. Git SHA proves byte identity, not runtime compatibility.",
   "verified_file_count": 35,
   "files": [
     {
@@ -183,5 +183,11 @@
       "git_blob_sha": "1c9b338cf9352ea364975dc52081648a1b2d0ff8",
       "size_bytes": 25203
     }
+  ],
+  "downstream_modified_files": [
+    "habitat_vln/envs/habitat_env.py",
+    "habitat_vln/habitat_vln_nav.py",
+    "habitat_vln/demos/run_grounded_navida_demo.py",
+    "habitat_vln/runtime/scheduler.py"
   ]
 }

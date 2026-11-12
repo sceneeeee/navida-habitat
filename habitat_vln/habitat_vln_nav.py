@@ -476,6 +476,7 @@ def main():
         dataset_path=args.dataset_path,
         scenes_dir=args.scenes_dir,
         gpu_device_id=args.gpu_device_id,
+        paper_pure=args.official_navida_http,
     )
     try:
         run_navigation(env, policy, args, controller=controller)
