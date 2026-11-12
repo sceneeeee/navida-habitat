@@ -1,5 +1,10 @@
 # navida-habitat
 
+> **SURF closeout (2026-11-07 documentation):** The SURF research project has concluded. This repository preserves the validated engineering integration of the NaVIDA checkpoint and Habitat simulator. **No official VLN benchmark or physical-robot deployment was completed.** A five-step historical smoke test established engineering connectivity; a subsequent goal-grounded 80-step test-scene episode in the paired evaluator repo **failed to reach its navigation goal** ([RtimesC/habitat-lab PR #5](https://github.com/RtimesC/habitat-lab/pull/5)). Neither is a formal benchmark.
+>
+> **Reports:** [SURF closeout (中文)](docs/surf-closeout.zh-CN.md) · [English engineering case study](docs/portfolio-case-study.md) · [Git contribution audit](docs/contribution-audit.md) · [Validation evidence](docs/validation-report.md) · [HTTP API](docs/api-contract.md) · [Demo checklist](docs/demo-recording-checklist.md).
+
+
 在 Habitat 中运行官方 NaVIDA checkpoint 的独立推理服务与严格 `paper_pure` 协议实现。
 
 本仓库当前负责模型侧：
@@ -298,11 +303,11 @@ python -m pytest -q
 - 与 Habitat 客户端的 5-step 端到端闭环
 - 合并后独立端口启动和 `/health` 验证
 
-## 数据集与 Demo 路线
+## 历史数据集与 Demo 路线（SURF 已结项）
 
-### 当前：HM3D 工程 Demo
+### 原定：HM3D 工程 Demo（未完成）
 
-当前优先使用 HM3D 或其他合法 Habitat 场景，制作 instruction-aligned 工程 demo：
+SURF 开发期间计划使用 HM3D 或其他合法 Habitat 场景制作 instruction-aligned 工程 demo，拟包括：
 
 - 为场景定义明确起点、朝向和目标。
 - 编写与实际目标和路径对应的自然语言指令。
@@ -312,7 +317,7 @@ python -m pytest -q
 
 该结果用于验证工程闭环和观察跨场景泛化，不作为官方 R2R/RxR benchmark。
 
-### 后续：MP3D + R2R VLN-CE
+### 原定后续：MP3D + R2R VLN-CE（未开展正式评测）
 
 论文级或正式 benchmark 阶段再接入：
 
@@ -324,13 +329,13 @@ python -m pytest -q
 
 R2R episode 绑定 MP3D 的 scene ID、起点、朝向、目标和参考路径，因此 HM3D 结果不能与 R2R 论文指标直接比较。
 
-项目当前计划是先完成 HM3D 工程 demo；在论文阶段正式使用 MP3D/R2R 数据前，再联系数据集维护者并完成所需授权确认。
+SURF 期间曾计划 HM3D 工程 Demo；实际上，协作仓库 [RtimesC/habitat-lab PR #5](https://github.com/RtimesC/habitat-lab/pull/5) 于 2026-07-23 在内置 **skokloster-castle 测试场景**完成了一个目标对齐的 80 步真实模型 episode，**NaVIDA 失败（success=0、SPL=0，最终目标距离约 8.620 m）**。它不是 HM3D 或 MP3D/R2R 正式基准；原定的 HM3D 扩展及正式 benchmark 均未完成。未来实验应独立标记为 post-SURF follow-up，并遵守场景与数据集权限。
 
 数据集、场景、模型权重、训练图像和评估视频不得提交到普通 Git。
 
-## 下一阶段
+## 原计划后续工作（SURF 结项时未完成）
 
-下一阶段交付目标：
+以下内容是 SURF 期间原定研究路线或潜在的后续独立工作，**不是正在执行的 SURF 交付任务，也不能作为已完成成果**：
 
 1. 构造一个 instruction、起点、路径和目标相匹配的 HM3D episode。
 2. 跑通一个完整 Official NaVIDA 自主导航 episode。
