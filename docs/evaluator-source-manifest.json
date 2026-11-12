@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "snapshot_repository": "RtimesC/habitat-lab",
+  "snapshot_commit": "835ac41e9ecf82c2c13b4bdf2f6747aef70860d6",
+  "destination_repository": "sceneeeee/navida-habitat",
+  "destination_branch": "feat/surf-evaluator-consolidation",
+  "generated_on": "2026-11-07",
+  "note": "Historical import baseline: original Git blob SHAs and sizes at import, not current working-tree hashes. See downstream_modified_files and evaluator-provenance.md for post-import changes. Git SHA proves byte identity, not runtime compatibility.",
+  "verified_file_count": 35,
+  "files": [
+    {
+      "path": "habitat_vln/__init__.py",
+      "git_blob_sha": "c7792d4fd840c123230955337a2734502d9b18b8",
+      "size_bytes": 67
+    },
+    {
+      "path": "habitat_vln/control/__init__.py",
+      "git_blob_sha": "02252d2fe54ed00dc0cac206cc2a49a7a4e79f1e",
+      "size_bytes": 472
+    },
+    {
+      "path": "habitat_vln/control/navigation_controller.py",
+      "git_blob_sha": "af296b88c1d3410d263fa74cd000599dedcf3c8f",
+      "size_bytes": 10295
+    },
+    {
+      "path": "habitat_vln/core/__init__.py",
+      "git_blob_sha": "08038d325bceac6f13720fb6078c8e0872aafe90",
+      "size_bytes": 213
+    },
+    {
+      "path": "habitat_vln/core/types.py",
+      "git_blob_sha": "de58fbfd6f8db84cc5844ca7d93d13785b0008a2",
+      "size_bytes": 1609
+    },
+    {
+      "path": "habitat_vln/data/__init__.py",
+      "git_blob_sha": "7f788032975aa647683b4f129d1b39d5808b9ca0",
+      "size_bytes": 72
+    },
+    {
+      "path": "habitat_vln/data/check_vln_data.py",
+      "git_blob_sha": "b1036aa0edef857aa9e0e3d4d9df8f2f581c1081",
+      "size_bytes": 2194
+    },
+    {
+      "path": "habitat_vln/data/create_grounded_demo_episode.py",
+      "git_blob_sha": "6179830322961ed7a59f6334b49a83dbe57630c8",
+      "size_bytes": 4101
+    },
+    {
+      "path": "habitat_vln/data/generate_hm3d_pointnav_smoke.py",
+      "git_blob_sha": "17c3e1725e89f677832b7f46ab661be1eaffbb9a",
+      "size_bytes": 17229
+    },
+    {
+      "path": "habitat_vln/data/navida_data.py",
+      "git_blob_sha": "7d53200eca53481cc14680d58cc265f8bb346a37",
+      "size_bytes": 12783
+    },
+    {
+      "path": "habitat_vln/demos/__init__.py",
+      "git_blob_sha": "472edf721bd0cb060aa9c58d91507ce68e797548",
+      "size_bytes": 79
+    },
+    {
+      "path": "habitat_vln/demos/run_grounded_navida_demo.py",
+      "git_blob_sha": "e99eab37fb2e11efa3b74b5cb59918079a2c23ef",
+      "size_bytes": 4995
+    },
+    {
+      "path": "habitat_vln/envs/__init__.py",
+      "git_blob_sha": "09e773876b6356d8d55008a35f8e10cc11623f3b",
+      "size_bytes": 1237
+    },
+    {
+      "path": "habitat_vln/envs/habitat_env.py",
+      "git_blob_sha": "a0778e86ab654be8ce1d144a84d1da58b5c2c576",
+      "size_bytes": 3232
+    },
+    {
+      "path": "habitat_vln/envs/habitat_state.py",
+      "git_blob_sha": "fa942bba0aa0d3b2f857e945aa371676b1bdbd7a",
+      "size_bytes": 11349
+    },
+    {
+      "path": "habitat_vln/evaluation/__init__.py",
+      "git_blob_sha": "eddb5ad618fd4d25039a1528e6676db3f6d23b24",
+      "size_bytes": 73
+    },
+    {
+      "path": "habitat_vln/evaluation/evaluate_pointnav_policies.py",
+      "git_blob_sha": "998f8e5e5b90483626c82426a1d03363019c3cea",
+      "size_bytes": 14442
+    },
+    {
+      "path": "habitat_vln/habitat_vln_nav.py",
+      "git_blob_sha": "bd5767dd8a382cd199fc16883c80c438b1bbe08b",
+      "size_bytes": 14878
+    },
+    {
+      "path": "habitat_vln/policies/__init__.py",
+      "git_blob_sha": "6c486270126d5feb402d32f1a5f09a116587e7d3",
+      "size_bytes": 1064
+    },
+    {
+      "path": "habitat_vln/policies/navida_policy.py",
+      "git_blob_sha": "26ccead71873d1a52d3e31000629dc344b81edb9",
+      "size_bytes": 8753
+    },
+    {
+      "path": "habitat_vln/policies/official_navida_http_policy.py",
+      "git_blob_sha": "b37a66326a328952c3dad4fec75236984c88cfbc",
+      "size_bytes": 12649
+    },
+    {
+      "path": "habitat_vln/policies/prompts.py",
+      "git_blob_sha": "3e6e4a57a8c6cada9daf50b3de3c4c5f3395df90",
+      "size_bytes": 4487
+    },
+    {
+      "path": "habitat_vln/policies/vlm_policy.py",
+      "git_blob_sha": "1b7044a7764e477cd8c9588e5e4df6d45c5cec6d",
+      "size_bytes": 9448
+    },
+    {
+      "path": "habitat_vln/runtime/__init__.py",
+      "git_blob_sha": "82e5b98edc9c2d6c663b707706286e41b3201fea",
+      "size_bytes": 1214
+    },
+    {
+      "path": "habitat_vln/runtime/artifacts.py",
+      "git_blob_sha": "caadc4b649c90c736c92429453bea42484d3f720",
+      "size_bytes": 4221
+    },
+    {
+      "path": "habitat_vln/runtime/grounded_demo_artifacts.py",
+      "git_blob_sha": "0b350681954f610a359197b39623a170104f36fa",
+      "size_bytes": 2319
+    },
+    {
+      "path": "habitat_vln/runtime/navigation_runner.py",
+      "git_blob_sha": "3f8438b3eb8ee9c40064ad845a514cdf1c63f116",
+      "size_bytes": 39395
+    },
+    {
+      "path": "habitat_vln/runtime/recorder.py",
+      "git_blob_sha": "7883bc460ab0f6483550aa766a1a67a350c5e0ee",
+      "size_bytes": 2334
+    },
+    {
+      "path": "habitat_vln/runtime/scheduler.py",
+      "git_blob_sha": "3dd235bf3fdae53dec4dcbc87a7a377a837b836a",
+      "size_bytes": 4388
+    },
+    {
+      "path": "test/test_grounded_demo_episode.py",
+      "git_blob_sha": "ac23f8616e127cbd0f36e8bd17e1dc06789a6c8b",
+      "size_bytes": 2369
+    },
+    {
+      "path": "test/test_grounded_navida_demo.py",
+      "git_blob_sha": "aa67f0038aa3449e5de6d6f236fc32e02ef0b98f",
+      "size_bytes": 26961
+    },
+    {
+      "path": "test/test_habitat_vln_control.py",
+      "git_blob_sha": "560c26186afc292acd5cf44a457a6e8758696a43",
+      "size_bytes": 3257
+    },
+    {
+      "path": "test/test_habitat_vln_interfaces.py",
+      "git_blob_sha": "f592dd64ab5ecfaa59e7571465a8661edfdd5606",
+      "size_bytes": 8291
+    },
+    {
+      "path": "test/test_habitat_vln_scheduler.py",
+      "git_blob_sha": "098fcae9489740de2f47b09384bb3eacdb799e39",
+      "size_bytes": 2537
+    },
+    {
+      "path": "test/test_official_navida_http.py",
+      "git_blob_sha": "1c9b338cf9352ea364975dc52081648a1b2d0ff8",
+      "size_bytes": 25203
+    }
+  ],
+  "downstream_modified_files": [
+    "habitat_vln/envs/habitat_env.py",
+    "habitat_vln/habitat_vln_nav.py",
+    "habitat_vln/demos/run_grounded_navida_demo.py",
+    "habitat_vln/runtime/scheduler.py"
+  ]
+}

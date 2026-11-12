@@ -2,6 +2,8 @@
 
 Compiled: 2026-11-07. This is a retrospective audit, not a new experiment.
 
+**Personal-repository consolidation update:** An evaluator application subset was copied unchanged from the RtimesC/habitat-lab merged PR #5 snapshot (835ac41e, July 23); 35 extracted source/test files matched their source Git blob hashes after the import. This is **file-integrity validation only**. At the GitHub-only import stage, neither the new HTTP contract test nor the imported evaluator tests nor a real checkpoint/Habitat episode had been executed in the consolidated repository. See [migration acceptance checklist](evaluator-migration-acceptance.md).
+
 ## Historical evidence
 
 | Category | Historical observation | Source | Interpretation |
@@ -45,3 +47,15 @@ The optional real-scene integration test additionally needs NAVIDA_HABITAT_RUN_I
 - A reproducible independent run in a newly prepared environment.
 
 See [SURF closeout report](surf-closeout.zh-CN.md) for the final project boundary.
+
+
+## Post-import local regression (2026-11-12)
+
+Python 3.10.12 local `tests/`: 97 run, 96 passed, 1 opt-in real-scene test
+skipped. This includes 8 explicit Fake Config/CLI unit tests and the real
+localhost HTTP contract with a fake policy. Initial sandbox socket errors were
+resolved by rerunning outside that sandbox. Compilation and diff checks passed.
+These results do not validate the Python 3.9 evaluator stack, real NaVIDA
+checkpoint, measured Habitat motion or scene-level success. Original SURF
+results above remain historical; post-import changes are listed in
+[evaluator provenance](evaluator-provenance.md).

@@ -43,3 +43,6 @@ videos/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Local Codex session handoff (never commit)
+temp_report.md
