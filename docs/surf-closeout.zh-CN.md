@@ -67,7 +67,7 @@ PR #6 的五步联调中，自然语言指令**未与随机 PointNav 目标对�
 - parser 最多接受 3 个合法 sub-chunks，默认仅执行前 2 个；按 25 cm 或 15° 细分原子动作。
 - 对无效模型输出，本实现返回错误且不注入随机/前进 fallback；配对 evaluator 应当终止该 episode。**这与官方 evaluator 的某些容错策略不同**，不可称为逐位忠实复现。
 - HTTP 服务在一个进程内管理单一活动 episode，提供有序 step 校验；其用途是本地仿真联调，不是互联网生产服务。
-- 模型权重、场景数据、完整测试日志、视频未纳入本仓库，复现真实场景/模型需要自行取得合法访问权限。
+- 模型权重、场景数据、完整测试日志和大型原始视频未纳入本仓库。SURF 结束后另行制作的精选 Fake Policy 工程短视频与小型展示素材已作为个人 Portfolio 衍生物提交；它们不属于真实 NaVIDA 导航实验。复现真实场景/模型仍需自行取得合法访问权限。
 - 本仓库没有根目录 LICENSE。官方模型的授权信息不等同于官方代码或本仓库的许可；复用与发布需单独核查。
 
 ## 6. 未完成与不再纳入 SURF 交付的事项
@@ -84,14 +84,16 @@ PR #6 的五步联调中，自然语言指令**未与随机 PointNav 目标对�
 
 在 SURF 结项后，为了使个人项目能独立维护，现从 [RtimesC/habitat-lab 在 2026-07-23 的合并快照](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6) 提取与 NaVIDA 直接相关的仿真应用代码、HTTP client、目标对齐 Demo 和历史测试，放入个人 `navida-habitat` 仓库。所搬运的 35 个源码/测试文件已逐一与原 Git blob SHA 核对一致，MIT 许可与其他团队成员的通用框架归属已记录，见 [迁移来源](evaluator-provenance.md)。
 
-**这一整合发生在 SURF 结束之后，不等于新开展了 SURF 研究实验。** 当前尚未在迁移后的仓库重新运行真实模型或 Habitat 场景，不能称为已通过迁移验收。详见 [验收清单](evaluator-migration-acceptance.md)。
+**这一整合发生在 SURF 结束之后，不等于新开展了 SURF 研究实验。** 随后的个人仓库工程验收已于 2026-11-15 完成：在真实 Habitat-Lab/Sim 0.3.3 中验证场景/reset、0.25 m/15° 动作几何，并通过真实 TCP HTTP、Runner 与 Deterministic Fake Policy 完成正常及无效输出两个闭环用例和 640×480 展示。**这证明软件工程集成，不证明 NaVIDA 学习策略导航成功。** 详细验收和可复现证据见 [最终验收清单](evaluator-migration-acceptance.md) 与 [工程 Demo](engineering-demo.md)。
 
 ## 8. 结项后的维护规则
 
 1. 本次只整理证据和文档，不扩展算法、训练模型或补造评测结果。
 2. README 与 roadmap 的状态必须与本结项报告一致，历史 Stage 2 记录保留并注明其时间上下文。
-3. 不在 Git 中提交模型权重、数据集、运行日志、结果表或视频；若以后发布 Demo，应提供有权限的独立链接并说明采集条件。
+3. 不在 Git 中提交模型权重、数据集、场景/navmesh、完整运行目录或大型原始视频。允许提交经过审查、带明确 Fake Policy 标注且可追溯到真实运行的小型展示素材（本仓库 `docs/assets/` 中的精选截图、轨迹和短视频即属此类）。
 4. 不擅自发布 Release、打 tag、合并主分支或将仓库标为 archived；这些属于单独的项目管理决策。
 5. 面向申请的英文案例见 [portfolio-case-study.md](portfolio-case-study.md)；HTTP 契约见 [api-contract.md](api-contract.md)。
+
+**SURF 原项目与后续个人工程收尾的边界：** SURF 研究任务已经结束；2026-11 的代码整合、真实 Habitat 动作测量、Fake Policy HTTP/Runner 闭环和展示素材制作属于 SURF 结束后的个人工程收尾，不应追认为 SURF 期间的研究结果。
 
 **可对外使用的结项描述：** “Contributed the model-side NaVIDA–Habitat inference service and evaluator-side HTTP adapter/demo, with strict action parsing and auditable atomic-action execution. Historical tests covered a five-step connectivity smoke test and an 80-step instruction-grounded simulation episode in which NaVIDA stopped at the wrong goal location. No standard VLN benchmark or physical-robot deployment was completed.”

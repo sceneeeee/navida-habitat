@@ -25,8 +25,8 @@ Compiled: 2026-11-07. This is a retrospective audit, not a new experiment.
 
 - Source-code behavior was inspected through the GitHub repository, including HTTP service, policy, action parser, CLI and tests.
 - Merged pull requests #1–#6 and the original Stage 2 technical record supply historical model-side validation. The RtimesC/habitat-lab PR #4 and #5 descriptions supply evaluator-side adapter and grounded-demo evidence. Attribution details: [contribution-audit.md](contribution-audit.md).
-- Tests and checkpoint runs were **not repeated** during this documentation closeout. An attempted direct git clone from the execution container failed because the container could not resolve github.com; the GitHub connector was used to inspect and update source files instead.
-- The current documentation changes do not demonstrate a fresh runtime or reproduction.
+- Tests and checkpoint runs were **not repeated during the 2026-11-07 documentation-only closeout**. At that time, an attempted direct git clone from the execution container failed because the container could not resolve github.com; the GitHub connector was used to inspect and update source files instead.
+- The 2026-11-07 documentation changes did not demonstrate a fresh runtime. The later 2026-11-15 post-migration A/B/C execution is recorded in the dated section below.
 
 ## Reproduction commands (not run in this closeout)
 
@@ -44,7 +44,7 @@ The optional real-scene integration test additionally needs NAVIDA_HABITAT_RUN_I
 - Standard R2R VLN-CE / RxR protocol, held-out scenes and comparable SR/SPL/NE aggregate benchmark metrics. The individual demo's 0.0 success/SPL does not substitute for a benchmark.
 - Multi-episode performance statistics and controlled failure analysis.
 - Jetson, ROS 2 or physical FrogBot deployments.
-- A reproducible independent run in a newly prepared environment.
+- A post-migration real-checkpoint replay in the consolidated personal repository. This remains optional follow-up, not a blocker for the completed Fake Policy engineering integration.
 
 See [SURF closeout report](surf-closeout.zh-CN.md) for the final project boundary.
 
@@ -60,7 +60,7 @@ checkpoint, measured Habitat motion or scene-level success. Original SURF
 results above remain historical; post-import changes are listed in
 [evaluator provenance](evaluator-provenance.md).
 
-## Real post-migration validation (2026-11-15)
+## Real post-migration validation and final project closeout (2026-11-15)
 
 Stages A/B/C and the 640×480 fixed-sequence showcase have now run in real
 Habitat 0.3.3, with a separate Python3.10 localhost service and Python3.9
@@ -69,5 +69,4 @@ evaluator. Policy source: deterministic Fake Policy, no checkpoint. See
 pose CSV, raw screenshot and labelled H.264 clip. The earlier closeout and
 GitHub-only-import paragraphs describe their original dates, not current
 runtime status. Historical NaVIDA failure and separate Oracle evidence remain
-unchanged. Current test counts are recorded in the PR description and local
-ignored temp_report after actual execution.
+unchanged. Final local suites reported Python 3.10 model-side: **98 passed, 1 skipped, 0 failed**; Python 3.9 evaluator-side: **56 passed, 0 failed**. The lightweight GitHub Actions workflow passed; it uses fakes and compile checks and does not launch Habitat or load a checkpoint.
