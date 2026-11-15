@@ -43,3 +43,9 @@ videos/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Local Codex session handoff (never commit)
+temp_report.md
+
+# Only this compact, labelled engineering showcase clip is versioned.
+!docs/assets/engineering-demo.mp4

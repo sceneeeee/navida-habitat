@@ -2,6 +2,10 @@
 
 **Audit date:** 2026-11-07. **Evidence basis:** GitHub PR authorship, commit author metadata, changed-file lists and the original PR validation descriptions; not an interview with teammates or a manual-code authorship investigation.
 
+## Clarification from the repository owner (2026-11-07)
+
+The owner confirms that the personal **sceneeeee/navida-habitat** model-side repository was developed and maintained by the owner with **Codex assistance**, and did not involve another human collaborator. This first-person statement is consistent with, but not proved solely by, its Git history. The **RtimesC/habitat-lab** evaluator is nevertheless a separate **SURF team repository**; only the specific changes documented below are account-attributable, and its broader base framework has its own contributors.
+
 ## What the history supports
 
 In the default branch of [sceneeeee/navida-habitat](https://github.com/sceneeeee/navida-habitat), the 17 commits available before this closeout branch (initial scaffold through July 23) all have Git author **evenS**, linked to GitHub account **sceneeeee**. Its six historical PRs (#1–#6) were opened by sceneeeee, and their individual PR commit lists contain only evenS / sceneeeee as author. No Co-authored-by footer was found in these PR commit messages.

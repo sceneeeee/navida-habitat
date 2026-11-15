@@ -80,7 +80,13 @@ PR #6 的五步联调中，自然语言指令**未与随机 PointNav 目标对�
 
 这些是**原计划但未完成**的工作，不应作为简历已完成成果。未来如独立继续做 Habitat 仿真，应单独注明为“Post-SURF follow-up”；如希望使用 FrogBot，须重新获得导师及设备管理方授权，不能把可能的未来实机实验算作本次 SURF 交付。
 
-## 7. 结项后的维护规则
+## 7. SURF 结束后的个人仓库整合（2026-11）
+
+在 SURF 结项后，为了使个人项目能独立维护，现从 [RtimesC/habitat-lab 在 2026-07-23 的合并快照](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6) 提取与 NaVIDA 直接相关的仿真应用代码、HTTP client、目标对齐 Demo 和历史测试，放入个人 `navida-habitat` 仓库。所搬运的 35 个源码/测试文件已逐一与原 Git blob SHA 核对一致，MIT 许可与其他团队成员的通用框架归属已记录，见 [迁移来源](evaluator-provenance.md)。
+
+**这一整合发生在 SURF 结束之后，不等于新开展了 SURF 研究实验。** 当前尚未在迁移后的仓库重新运行真实模型或 Habitat 场景，不能称为已通过迁移验收。详见 [验收清单](evaluator-migration-acceptance.md)。
+
+## 8. 结项后的维护规则
 
 1. 本次只整理证据和文档，不扩展算法、训练模型或补造评测结果。
 2. README 与 roadmap 的状态必须与本结项报告一致，历史 Stage 2 记录保留并注明其时间上下文。

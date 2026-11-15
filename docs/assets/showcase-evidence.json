@@ -1,0 +1,103 @@
+{
+  "policy_source": "deterministic_fake_policy",
+  "scene": "skokloster-castle",
+  "initial_pose": {
+    "position": [
+      3.218496799468994,
+      0.20991861820220947,
+      14.824010848999023
+    ],
+    "quaternion_xyzw": [
+      0.0,
+      -0.3303377330303192,
+      0.0,
+      0.943862795829773
+    ],
+    "metrics": {
+      "distance_to_goal": 7.291404724121094,
+      "success": 0.0,
+      "spl": 0.0,
+      "distance_to_goal_reward": -0.0
+    },
+    "episode_over": false
+  },
+  "final_pose": {
+    "position": [
+      4.3821258544921875,
+      0.20991861820220947,
+      13.365238189697266
+    ],
+    "quaternion_xyzw": [
+      0.0,
+      -0.330337792634964,
+      0.0,
+      0.9438628554344177
+    ],
+    "metrics": {
+      "distance_to_goal": 7.6959638595581055,
+      "success": 0.0,
+      "spl": 0.0,
+      "distance_to_goal_reward": -0.0
+    },
+    "episode_over": true
+  },
+  "actions": [
+    "turn_left",
+    "turn_left",
+    "turn_right",
+    "turn_right",
+    "move_forward",
+    "move_forward",
+    "turn_left",
+    "turn_left",
+    "move_forward",
+    "move_forward",
+    "turn_right",
+    "turn_right",
+    "move_forward",
+    "move_forward",
+    "turn_right",
+    "turn_right",
+    "move_forward",
+    "move_forward",
+    "turn_left",
+    "turn_left",
+    "stop"
+  ],
+  "http_requests": 21,
+  "decisions": 11,
+  "collisions": 0,
+  "logical_tick_hz": 1,
+  "wall_clock_paced": false,
+  "video_fps": 2.0,
+  "media": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 640,
+        "height": 480,
+        "r_frame_rate": "2/1",
+        "nb_read_frames": "21"
+      }
+    ],
+    "format": {
+      "duration": "10.500000"
+    }
+  },
+  "first_decision_ids": [
+    0,
+    0,
+    1,
+    1
+  ],
+  "source_commit": "2d99b01993632a797f6101e265a8ee02cbcf688d",
+  "provenance_note": "Showcase ran with the uncommitted Demo/recording changes described in PR #8; source_commit is the base, not the final commit.",
+  "asset_sha256": {
+    "engineering-demo.mp4": "4e1dd897b130156e22c924c983aedb902306c7e5776540c0d7354946cf058222",
+    "http-flow.svg": "bd1be75946429c00e125d7da27f357ce7badda869b25e982e5c5f03b26d95971",
+    "habitat-trajectory.png": "81bc7a2b3b633e0c457b670d1840c1cc17c5262ac1e3814a91c1abab4e382bf8",
+    "showcase-poses.csv": "5e7b481e4f5a8cb16bba35c5874bad2d022c4007bb2b6b748925663e608f5afa",
+    "habitat-scene.png": "1733f9be9904b75ea48625d1c700c8bed75a7e26ac448505e68eb3678905d046"
+  }
+}
