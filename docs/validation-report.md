@@ -44,7 +44,7 @@ The optional real-scene integration test additionally needs NAVIDA_HABITAT_RUN_I
 - Standard R2R VLN-CE / RxR protocol, held-out scenes and comparable SR/SPL/NE aggregate benchmark metrics. The individual demo's 0.0 success/SPL does not substitute for a benchmark.
 - Multi-episode performance statistics and controlled failure analysis.
 - Jetson, ROS 2 or physical FrogBot deployments.
-- A reproducible independent run in a newly prepared environment.
+- A post-migration real-checkpoint replay in the consolidated personal repository. This remains optional follow-up, not a blocker for the completed Fake Policy engineering integration.
 
 See [SURF closeout report](surf-closeout.zh-CN.md) for the final project boundary.
 
@@ -60,7 +60,7 @@ checkpoint, measured Habitat motion or scene-level success. Original SURF
 results above remain historical; post-import changes are listed in
 [evaluator provenance](evaluator-provenance.md).
 
-## Real post-migration validation (2026-11-15)
+## Real post-migration validation and final project closeout (2026-11-15)
 
 Stages A/B/C and the 640×480 fixed-sequence showcase have now run in real
 Habitat 0.3.3, with a separate Python3.10 localhost service and Python3.9
