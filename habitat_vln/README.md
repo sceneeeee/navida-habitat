@@ -1,6 +1,6 @@
-# Habitat evaluator application — extracted SURF snapshot
+# Habitat evaluator application — SURF-derived, independently validated
 
-This directory holds the **Habitat evaluator side** of the historical NaVIDA SURF integration. It was extracted from [RtimesC/habitat-lab @ 835ac41e](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6) for independent **personal portfolio maintenance**, with [source attribution and MIT license](../docs/evaluator-provenance.md).
+This directory holds the **Habitat evaluator side** of the historical NaVIDA SURF integration. It was extracted from [RtimesC/habitat-lab @ 835ac41e](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6) for independent **personal portfolio maintenance**. The migrated evaluator and real Habitat HTTP/Fake Policy showcase have since been executed and validated in the separate Python 3.9 environment; see [final engineering acceptance](../docs/evaluator-migration-acceptance.md) and [demo evidence](../docs/engineering-demo.md). Source attribution and the preserved third-party MIT notice are documented in [provenance](../docs/evaluator-provenance.md).
 
 **Not a complete fork of Meta Habitat-Lab.** Install Habitat-Lab/Habitat-Sim externally. The application's setup requirements and some dependencies remain tied to the historical 2026-07 versions. Post-import changes are recorded in the provenance document.
 
@@ -34,9 +34,9 @@ The historical app also retains some Qwen/NaVIDA policy modules imported by the 
 - **Habitat terminal:** Python 3.9, the historical SURF evaluator environment `habitat_vlm`, Habitat-Lab/Habitat-Sim and CV/video dependencies. Original team `AGENTS.md` cited Habitat-Sim 0.3.3; model-side Stage 2 records describe a **different** local 0.2.4 setup. These must not be assumed interchangeable.
 - A Habitat test scene (`skokloster-castle.glb` and navmesh) and necessary PointNav task configuration obtained through the lawful Habitat assets workflow.
 
-**This migration does not install or download those dependencies.** A fresh clean-environment replay is still required before describing the personal repository as self-contained or runnable end-to-end.
+**The repository does not install or download those dependencies automatically.** The verified local environment used Python 3.9.23 with Habitat-Lab/Sim 0.3.3. A new machine must recreate a compatible environment and obtain authorized test scenes/navmesh; this is a reproducibility requirement, not an outstanding blocker for the completed local engineering showcase.
 
-## Historical grounded demo — optional replay, not executed in this migration
+## Optional real-checkpoint grounded demo — historical command, not part of the final Fake Policy showcase
 
 Terminal 1, from the repository root in the model environment:
 
@@ -67,7 +67,7 @@ Notes:
 - The local model's response or navigation success may differ from the July 2026 experiment.
 - Run scripts in their matching separate environments. Do not `pip install -e .` in the evaluator's Python 3.9 env because root `pyproject.toml` specifies Python 3.10.
 
-## Testing (commands are suggestions; not run in this migration)
+## Evaluator-side regression tests (executed in the final local validation)
 
 ```bash
 python -m unittest discover -s test -p 'test_grounded_demo_episode.py' -v
@@ -76,14 +76,14 @@ python -m unittest discover -s test -p 'test_grounded_navida_demo.py' -v
 python -m compileall -q habitat_vln test
 ```
 
-These may require Habitat and CV dependencies. Record real results, dependency failures and later API changes in `temp_report.md`, which must never be committed.
+These commands were executed in the verified Python 3.9 Habitat environment; the final local evaluator-side suite reported **56 passed, 0 failed**. The exact local environment and run details are in the final acceptance record. On another machine, first install the compatible Habitat/CV dependencies; do not assume the commands are dependency-free.
 
 **Historical PR #5 result:** one goal-aligned test scene, 80 simulator steps, NaVIDA model STOP at wrong location, success=0, SPL=0, final distance ~8.620m. A separate Oracle succeeded. These are historical **single-episode** engineering observations, not new results or standard VLN benchmark metrics.
 
 See [SURF validation report](../docs/validation-report.md) and [contribution audit](../docs/contribution-audit.md).
 
 
-## Post-import configuration checks (2026-11-12)
+## Post-import configuration checks (2026-11-12; historical intermediate milestone)
 
 Both the ordinary CLI's `--official-navida-http` path and the Grounded Demo
 explicitly request 0.25m forward / 15-degree turn configuration and check it
@@ -101,11 +101,11 @@ It uses explicit Fake Config / environment / runner boundaries and tests both
 CLI routes, default preservation, rejection of failed injection and invalid
 frequencies. It does not install or validate Habitat. CI also runs this bounded
 suite and triggers on `test/**`; it still does not run the Python 3.9 Habitat
-regressions. The separate real-Habitat acceptance gates remain open.
+regressions. Those were interim checks; the real-Habitat motion and HTTP/Runner gates were subsequently completed on 2026-11-15, as documented below.
 
-## Verified engineering Demo
+## Final verified engineering Demo (2026-11-15)
 
-The real post-import A/B/C checks and 640×480 fixed-action showcase now pass;
+The real post-import A/B/C checks and 640×480 fixed-action showcase passed;
 see [reproduction/evidence](../docs/engineering-demo.md). These use an explicitly
 labelled Deterministic Fake Policy, not a live checkpoint. New repository
 scripts replace the former local-only audit scripts. Earlier July/initial-import
