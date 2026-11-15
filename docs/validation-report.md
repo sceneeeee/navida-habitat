@@ -69,5 +69,4 @@ evaluator. Policy source: deterministic Fake Policy, no checkpoint. See
 pose CSV, raw screenshot and labelled H.264 clip. The earlier closeout and
 GitHub-only-import paragraphs describe their original dates, not current
 runtime status. Historical NaVIDA failure and separate Oracle evidence remain
-unchanged. Current test counts are recorded in the PR description and local
-ignored temp_report after actual execution.
+unchanged. Final local suites reported Python 3.10 model-side: **98 passed, 1 skipped, 0 failed**; Python 3.9 evaluator-side: **56 passed, 0 failed**. The lightweight GitHub Actions workflow passed; it uses fakes and compile checks and does not launch Habitat or load a checkpoint.
