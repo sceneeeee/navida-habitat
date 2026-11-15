@@ -60,7 +60,7 @@ The parser is intentionally stricter than some behaviors of the upstream evaluat
 
 ## Evidence and results
 
-**All figures below are historical repository/PR evidence, not results remeasured for this case study.**
+**The SURF model/experiment figures below are historical repository/PR evidence, not remeasured for this case study.** The separately dated post-SURF engineering validation is described in its own section.
 
 - **Automated regression suite:** 88 tests run; 87 passed and one optional real-scene integration test skipped (recorded in PR #6).
 - **Checkpoint execution:** the actual model was loaded and called with local 4-bit inference on an RTX 4060 Ti 8 GB.
@@ -85,7 +85,7 @@ Do not attribute upstream NaVIDA model design, training, public checkpoint or th
 - No official R2R VLN-CE or RxR benchmark result is documented here.
 - No FrogBot, ROS 2, Jetson or other physical-robot deployment is claimed.
 - The service is intended for localhost research integration, not hardened production use.
-- The model, datasets, scenes and recorded videos are not distributed with this repository.
+- Model weights, datasets, licensed scenes and large raw recordings are not distributed. A small, clearly labelled Fake Policy engineering showcase clip and selected derivatives are included under `docs/assets/`.
 - License permissions must be checked separately for the model, upstream code, third-party simulation frameworks and this repository; no root repository LICENSE has been selected.
 
 ## Post-SURF personal repository consolidation (2026-11)
