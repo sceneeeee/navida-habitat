@@ -1,57 +1,69 @@
-# SURF evaluator migration acceptance checklist
+# Final engineering closeout — NaVIDA–Habitat
 
-**Source frozen:** RtimesC/habitat-lab merge of PR #5 at `835ac41e9ecf82c2c13b4bdf2f6747aef70860d6`.
+**Project status: COMPLETED — software integration and deterministic Habitat engineering showcase.**
+**SURF research period:** concluded.
+**Personal repository consolidation:** merged into `main` through PR #8 on 2026-11-15.
+**Final engineering evidence:** [engineering-demo.md](engineering-demo.md).
 
-The GitHub migration imports **35** historical `habitat_vln/` application and selected `test/` source/test files (258,210 bytes), all verified by exact matching Git blob hashes against the historical source snapshot. No GPU or Habitat execution happened in the remote GitHub editing environment. The initial GitHub-only import did not run the fake-policy HTTP test. Local post-import checks are recorded below.
+This document supersedes the earlier migration checklist and its interim status notes. Earlier sections in the SURF closeout, validation report and provenance history remain historical records and should be read with their original dates.
 
-## Acceptance gates
+## 1. Final scope
 
-1. Verify the imported relative paths and file content against the historical source snapshot.
-2. Verify original MIT notice is retained and the source/author attribution is explicit.
-3. Run Python 3.10 model-side tests separately from Python 3.9 evaluator-side tests.
-4. Confirm the external Habitat-Lab/Habitat-Sim versions and the PointNav config path; document the exact environment in `temp_report.md`.
-5. Run evaluator tests with scene-independent fakes first; record passed/skipped/failed counts.
-6. Perform GET /health, episode reset, one image step through the actual HTTP server; check error/no-fallback paths.
-7. With licensed test scene and checkpoint, run the grounded demo and collect episode JSON, trajectory CSV, RGB frames and MP4. Check actual results and logs, including failure cases, without altering the frozen historical evidence.
-8. Compare claimed model success with the evaluator result; the historical 80-step run **failed**, and Oracle was separate.
-9. Review README against the actual post-migration runtime; only then mark this personal repo's evaluator as verified.
-10. Verify no checkpoints, datasets, generated results/videos, access secrets or `temp_report.md` are included in git commits.
+The completed deliverable is a maintainable repository containing:
 
-**Implementation note:** downstream code historically depends on `habitat` imports and Python 3.9; source was copied verbatim at import. Post-import changes are explicitly listed in evaluator-provenance.md and the manifest; the original hashes remain an audit baseline.
+- NaVIDA-side model runtime, RGB history, strict action parsing, episode state and HTTP inference service.
+- Extracted SURF Habitat evaluator application, HTTP client, navigation runner, action execution, trajectory/media recording and relevant tests.
+- Two explicitly separate runtime environments: Python 3.10 model/service and Python 3.9 Habitat evaluator (Habitat-Lab/Sim 0.3.3).
+- Reproducible deterministic Fake Policy engineering demo, tests, bilingual README, source provenance and selected small presentation assets.
 
+The project is **not** a completed learned-navigation result, official VLN benchmark reproduction, production service or physical-robot deployment.
 
-## Local checks after import (2026-11-12)
+## 2. Completed acceptance gates
 
-Python 3.10 configuration/CLI unit tests use explicit fake Habitat boundaries;
-they do not validate a Python 3.9 Habitat installation or measure movement.
-The real localhost server/client contract uses an injected fake policy, without
-checkpoint or simulator. See `temp_report.md` (local, ignored) for exact commands
-and counts. Neither check closes gates 4 or 7.
+| Gate | Final evidence | Status |
+|---|---|---|
+| Historical source integrity | 35 imported files matched the frozen SURF source snapshot by Git blob SHA at initial import; subsequent changes are listed in the manifest/provenance | Passed |
+| License and attribution | Original Habitat-Lab MIT notice preserved; team framework and account-linked PR #4/#5 contributions distinguished | Passed |
+| Python 3.10 model-side suite | 98 passed, 1 skipped, 0 failed in the final showcase run | Passed |
+| Python 3.9 evaluator-side suite | 56 passed, 0 failed in the final showcase run | Passed |
+| Habitat runtime | Real Habitat-Lab/Sim 0.3.3, skokloster-castle scene/navmesh, WSLg D3D12 rendering and reset | Passed |
+| Motion semantics | Forward 0.249999864 m; left/right turns approximately 15 degrees; two left turns approximately 30 degrees; STOP ended episode | Passed |
+| HTTP client/server | Real localhost TCP, RGB PNG transport, episode/step ordering, action queue and decision-step reuse | Passed |
+| Normal/invalid execution | Normal case: 4 requests/4 Env steps; invalid case: 3 requests/2 Env steps, explicit invalid-output failure and no replacement action | Passed |
+| Runner artifacts | Real Habitat RGB, CSV/JSON summaries, terminal pose, H.264 videos and cleanup checks | Passed |
+| Curated showcase | One fixed-start 640x480 Fake Policy run: 21 actions, 21 requests, 11 fixed decisions, 0 collisions, explicit STOP; 10.5-second H.264 clip | Passed |
+| GitHub CI | Lightweight HTTP/config/demo regression workflow passed on the merged PR head | Passed |
 
-Before scene replay, inspect the resolved Habitat config and verify Official
-HTTP mode has `forward_step_size=0.25`, `turn_angle=15`. Measure motion in the
-real simulator as a separate check. Ordinary/Oracle policies retain their
-original geometry. Compare current files against the manifest's original
-hashes using its downstream exception list rather than expecting all 35 hashes
-to remain identical after fixes.
+Exact commands, environment details and artifact semantics are documented in [engineering-demo.md](engineering-demo.md). CI uses fakes and compile checks; it does not launch Habitat, load model weights or reproduce the local simulation.
 
-Deferred artifact follow-ups: CSV pose/image are before the action while
-metrics are after it; document pre/post fields and add a terminal pose/frame in
-a separate schema change. For video failures, minimally add an error when
-`write_video` returns False, then test that summary branch with the real runner.
-Neither issue is fixed by the configuration tests.
+## 3. Explicitly out of scope / not completed
 
-Actual local result: `/usr/bin/python3.10` full `tests/` suite ran 97 tests:
-96 passed, 1 opt-in real-scene test skipped, 0 failures/errors after localhost
-socket permission was granted. The 8 new configuration tests and 1 existing
-HTTP contract test passed within that suite. `compileall` and `git diff --check`
-passed. No real Habitat or checkpoint was run; Python 3.9 remains unavailable.
+These items are **not merge blockers** for the completed software-integration project and must not be represented as completed achievements:
 
-## Current acceptance scope (2026-11-15)
+- Replaying the NaVIDA checkpoint in the consolidated personal repository after migration.
+- Successful language-grounded navigation. The historical 80-step NaVIDA episode stopped at the wrong location (success=0, SPL=0, final distance about 8.620 m); the separate Oracle result is not NaVIDA performance.
+- Standard R2R VLN-CE / RxR benchmark, held-out multi-scene evaluation or aggregate SR/SPL/NE/nDTW claims.
+- Jetson, ROS 2, FrogBot or other physical-robot deployment.
+- Production hardening of the localhost HTTP service.
+- Cross-platform rendering and semantic-scene annotation validation.
 
-Real A/B/C and a 21-action 640×480 Fake Policy showcase passed. See
-[engineering-demo.md](engineering-demo.md). Environment/config, measured motion,
-TCP queue behavior, no-step invalid termination and Runner media are verified
-locally. Gate 7's **real checkpoint** replay remains unperformed; it is separate
-from approval of this historical-source / software-integration PR. No benchmark
-or checkpoint-performance claim follows from these engineering checks.
+A future real-checkpoint replay or research experiment is optional follow-up work and should be recorded separately, not used to reopen this completed SURF engineering deliverable.
+
+## 4. Reproduction
+
+See [the engineering demo guide](engineering-demo.md). The repository contains the bounded demo runner and exporter; it does not install packages or download model weights, scenes or datasets automatically.
+
+Use the matching Python environments and authorized Habitat test assets. Replace local interpreter and scene paths with paths on the target machine. Do not install the Python 3.10 root package into the Python 3.9 evaluator environment.
+
+## 5. Repository hygiene and licensing
+
+- The selected, labelled 640x480 presentation clip and small evidence derivatives are intentionally versioned under `docs/assets/`.
+- Large raw recordings, full-resolution run directories, model weights, GLB/navmesh scenes, datasets, credentials and local `temp_report.md` remain untracked/ignored.
+- The original Habitat-Lab MIT notice is retained at [third_party/habitat-lab-MIT.LICENSE](../third_party/habitat-lab-MIT.LICENSE).
+- **No repository-wide license has been selected for the personal model-side code.** The preserved third-party MIT notice does not automatically license every file in this repository. This is a deliberate unresolved owner decision, not a failed engineering gate.
+
+## 6. Final disposition
+
+The SURF / NaVIDA–Habitat software integration and its deterministic real-Habitat engineering showcase are **closed and complete**. No further implementation is required for this project’s stated engineering scope.
+
+Keep the repository public and maintainable as a completed portfolio project. Do not archive it merely because the project is complete; archive only if the owner later decides to stop accepting maintenance changes.
