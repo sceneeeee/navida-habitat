@@ -6,8 +6,7 @@
 把 RGB 与指令转换为可审计的原子动作，并记录决策、真实执行和终态，
 使“链路可运行”和“导航任务成功”能够被分别判断。
 
-**当前状态：** 已完成真实 Habitat 0.3.3 场景/reset、25cm/15°动作实测，
-以及真实 TCP 客户端、服务端队列、Habitat step 和 Runner 产物闭环。
+**项目状态：已结项（2026-11-15）——软件集成与确定性 Habitat 工程展示完成。** 已完成真实 Habitat 0.3.3 场景/reset、25cm/15°动作实测，以及真实 TCP 客户端、服务端队列、Habitat step 和 Runner 产物闭环。最终验收记录见 [docs/evaluator-migration-acceptance.md](docs/evaluator-migration-acceptance.md)。
 下面展示使用 **Deterministic Fake Policy（确定性固定动作策略）**，
 没有加载真实 NaVIDA，也不具备导航推理能力。
 
@@ -48,7 +47,7 @@ Fake Policy直接返回固定原子动作，不验证模型能力或代替parser
   两用例均生成H.264，并验证了正常/异常资源清理。
 - 本次展示：640×480、21动作、真实RGB/CSV/JSON/H.264及终态pose。
 
-两侧单元测试和轻量GitHub CI均会执行；**CI不启动真实Habitat或下载资产**。
+最终本地回归：Python 3.10模型端 **98通过、1跳过**；Python 3.9评估端 **56通过**。GitHub Actions亦通过；**CI不启动真实Habitat或下载资产**。
 原始大文件保留本地ignored目录，仅提交少量精选展示素材。
 
 ## 复现命令
@@ -56,9 +55,12 @@ Fake Policy直接返回固定原子动作，不验证模型能力或代替parser
 已有独立环境和合法场景后，在仓库根目录执行：
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 timeout 240s /usr/bin/python3.10 scripts/run_engineering_demo.py \
-  --habitat-python /home/evens/navida-stage-a/env/bin/python \
-  --scenes-dir /home/evens/navida-stage-a/data/habitat-test-scenes \
+MODEL_PYTHON=/usr/bin/python3.10
+HABITAT_PYTHON=/path/to/habitat-env/bin/python
+SCENES_DIR=/path/to/habitat-test-scenes
+PYTHONDONTWRITEBYTECODE=1 timeout 240s "$MODEL_PYTHON" scripts/run_engineering_demo.py \
+  --habitat-python "$HABITAT_PYTHON" \
+  --scenes-dir "$SCENES_DIR" \
   --output-dir outputs/engineering-demo
 ```
 
@@ -68,8 +70,8 @@ PYTHONDONTWRITEBYTECODE=1 timeout 240s /usr/bin/python3.10 scripts/run_engineeri
 [Demo说明](docs/engineering-demo.md)。不要把根目录Python3.10依赖安装进评估环境。
 
 ```bash
-PYTHONPATH=src /usr/bin/python3.10 -m unittest discover -s tests -v
-/home/evens/navida-stage-a/env/bin/python -m unittest discover -s test -v
+PYTHONPATH=src "$MODEL_PYTHON" -m unittest discover -s tests -v
+"$HABITAT_PYTHON" -m unittest discover -s test -v
 ```
 
 ## 历史模型实验、贡献与局限
@@ -85,7 +87,7 @@ NaVIDA在错误位置STOP：**success=0、SPL=0、最终距离约8.620m**。
 通用runner/controller/environment框架来自**SURF团队**，不能全部视为个人原创。
 35文件初始快照为 `835ac41e`，原始SHA与下游改动均保留在
 [manifest](docs/evaluator-source-manifest.json)，[Meta MIT许可](third_party/habitat-lab-MIT.LICENSE)
-与[贡献边界](docs/contribution-audit.md)不变。个人模型端尚未选择仓库级许可证。
+与[贡献边界](docs/contribution-audit.md)不变。个人模型端尚未选择仓库级许可证；当前结项不擅自替仓库所有者选择许可证。
 不提交权重、GLB/navmesh、数据集、原始大视频或temp_report.md。
 
 CSV旧pose/image字段对应动作前，metrics对应动作后；现在有明确的`state_timing`，
