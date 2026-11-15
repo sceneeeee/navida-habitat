@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "src/**"
+      - "scripts/**"
       - "habitat_vln/**"
       - "tests/**"
       - "test/**"
@@ -31,7 +32,7 @@ jobs:
           python -m pip install "numpy>=1.23,<2.0" "Pillow>=9.0,<12"
 
       - name: Compile imported code without executing Habitat or model
-        run: python -m compileall -q src tests habitat_vln test
+        run: python -m compileall -q src scripts tests habitat_vln test
 
       - name: Test real localhost model-server and evaluator-client contract with fake policy
         run: PYTHONPATH=src python -m unittest discover -s tests -p 'test_evaluator_http_contract.py' -v
@@ -41,3 +42,6 @@ jobs:
 
       - name: Evaluator config and CLI unit tests with explicit fakes (no Habitat runtime)
         run: PYTHONPATH=src python -m unittest discover -s tests -p 'test_evaluator_configuration.py' -v
+
+      - name: Fixed engineering sequence regression (no Habitat or checkpoint)
+        run: PYTHONPATH=src python -m unittest discover -s tests -p 'test_engineering_demo.py' -v

@@ -740,6 +740,7 @@ def _execute_navigation(
 
                 row = {
                     "step": step,
+                    "state_timing": "pose_image_before_action;metrics_after_action_or_no_step",
                     "frequency_mode": args.frequency_mode,
                     "policy_protocol": policy_protocol or "",
                     "target_vision_hz": vision_hz,
@@ -862,6 +863,11 @@ def _execute_navigation(
                     episode_video_path,
                     video_fps,
                 )
+                if not video_written:
+                    video_error = (
+                        "video encoder returned False: no readable frames or "
+                        "video writer unavailable"
+                    )
             except Exception as exc:
                 video_written = False
                 video_error = str(exc)
@@ -887,6 +893,18 @@ def _execute_navigation(
             if grounded_demo_artifacts:
                 episode = env.current_episode
                 episode_info = getattr(episode, "info", None) or {}
+                final_pose = None
+                final_pose_error = ""
+                try:
+                    state = env.sim.get_agent_state()
+                    rotation = state.rotation
+                    final_pose = {
+                        "position": [float(x) for x in state.position],
+                        "quaternion_xyzw": [float(rotation.x), float(rotation.y),
+                                            float(rotation.z), float(rotation.w)],
+                    }
+                except Exception as exc:
+                    final_pose_error = f"{type(exc).__name__}: {exc}"
                 instruction_source = (
                     "cli_override"
                     if args.instruction is not None
@@ -898,6 +916,9 @@ def _execute_navigation(
                 grounded_episode_summaries.append(
                     {
                         "episode_id": str(episode.episode_id),
+                        "policy_source": str(episode_info.get("policy_source", "unspecified")),
+                        "final_pose": final_pose,
+                        "final_pose_error": final_pose_error,
                         "scene_id": str(episode.scene_id),
                         "instruction": instruction,
                         "instruction_source": str(instruction_source),

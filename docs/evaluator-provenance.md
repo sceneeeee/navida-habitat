@@ -30,7 +30,7 @@ The extracted source files were originally located at **the same relative paths*
 - Do not report the original **Oracle** success as NaVIDA success. PR #5's single grounded test produced NaVIDA **success=0.0**, **SPL=0.0**, about **8.620m final goal distance**, after 80 steps.
 - Post-July DoorNav B1 work (RtimesC/habitat-lab PR #10) and unrelated team robot branches are not included in this migration.
 - Training/QLoRA experimental scripts are not migrated and no model weights or datasets are bundled.
-- This import was **not revalidated** under the personal repository's file layout; a GPU/Habitat replay remains a separate acceptance task.
+- Post-migration real Habitat/TCP checks A/B/C and a 640×480 fixed-action showcase now passed; these used a deterministic Fake Policy, not a live NaVIDA checkpoint. See [Demo evidence](engineering-demo.md).
 
 ## Minimal maintenance rule
 
@@ -63,3 +63,15 @@ remain unchanged.
 These are downstream engineering fixes, not changes to the historical SURF
 results. Real Python 3.9/Habitat-Sim 0.3.3 configuration composition, renderer,
 scene execution and measured 0.25m/15-degree motion remain acceptance work.
+
+
+## Showcase and recording changes (2026-11-15)
+
+`runtime/navigation_runner.py`, `runtime/recorder.py`, and
+`runtime/grounded_demo_artifacts.py` add explicit CSV time semantics, terminal
+pose/error recording, nonempty diagnostics for a False video result, and Fake
+Policy labels. `test/test_grounded_navida_demo.py` adds a corresponding
+regression. Their original manifest blob records are retained; the downstream
+list now covers all eight modified historical files. New repository-owned
+engineering Demo/asset-export scripts replace the earlier local-only scripts.
+The unchanged MIT notice and original team attribution continue to apply.

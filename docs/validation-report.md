@@ -59,3 +59,15 @@ These results do not validate the Python 3.9 evaluator stack, real NaVIDA
 checkpoint, measured Habitat motion or scene-level success. Original SURF
 results above remain historical; post-import changes are listed in
 [evaluator provenance](evaluator-provenance.md).
+
+## Real post-migration validation (2026-11-15)
+
+Stages A/B/C and the 640×480 fixed-sequence showcase have now run in real
+Habitat 0.3.3, with a separate Python3.10 localhost service and Python3.9
+evaluator. Policy source: deterministic Fake Policy, no checkpoint. See
+[Demo evidence and reproduction](engineering-demo.md) and its selected JSON,
+pose CSV, raw screenshot and labelled H.264 clip. The earlier closeout and
+GitHub-only-import paragraphs describe their original dates, not current
+runtime status. Historical NaVIDA failure and separate Oracle evidence remain
+unchanged. Current test counts are recorded in the PR description and local
+ignored temp_report after actual execution.

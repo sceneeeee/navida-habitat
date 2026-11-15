@@ -46,3 +46,12 @@ Actual local result: `/usr/bin/python3.10` full `tests/` suite ran 97 tests:
 socket permission was granted. The 8 new configuration tests and 1 existing
 HTTP contract test passed within that suite. `compileall` and `git diff --check`
 passed. No real Habitat or checkpoint was run; Python 3.9 remains unavailable.
+
+## Current acceptance scope (2026-11-15)
+
+Real A/B/C and a 21-action 640×480 Fake Policy showcase passed. See
+[engineering-demo.md](engineering-demo.md). Environment/config, measured motion,
+TCP queue behavior, no-step invalid termination and Runner media are verified
+locally. Gate 7's **real checkpoint** replay remains unperformed; it is separate
+from approval of this historical-source / software-integration PR. No benchmark
+or checkpoint-performance claim follows from these engineering checks.

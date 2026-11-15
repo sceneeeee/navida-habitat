@@ -9,6 +9,7 @@ TRAJECTORY_FIELDS = [
     "scene_id",
     "instruction",
     "step",
+    "state_timing",
     "frequency_mode",
     "policy_protocol",
     "target_vision_hz",

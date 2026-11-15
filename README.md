@@ -1,131 +1,125 @@
-# NaVIDA–Habitat | SURF Visual-Language Navigation Engineering
+# NaVIDA–Habitat · SURF navigation systems engineering
 
-[中文版 README](README.zh-CN.md) · [中文结项报告](docs/surf-closeout.zh-CN.md) · [Evaluator quickstart](habitat_vln/README.md) · [Engineering case study](docs/portfolio-case-study.md) · [Contribution audit](docs/contribution-audit.md) · [Validation evidence](docs/validation-report.md)
+[中文](README.zh-CN.md) · [Reproduce the Demo](docs/engineering-demo.md) · [Provenance](docs/evaluator-provenance.md) · [Historical validation](docs/validation-report.md)
 
-**Status:** SURF concluded (2026). The original model-server / Habitat integration has historical real-checkpoint validation. This personal repository now contains an **extracted SURF evaluator application** as well as the model server. **The consolidated file layout has not yet been rerun with the live checkpoint and Habitat scene**, so the post-migration end-to-end path remains pending fresh verification.
+Connect a visual-language navigation policy to Habitat through a strict,
+stateful HTTP interface while keeping incompatible model and simulator stacks
+in separate processes. Preserve every decision, executed action and terminal
+state so a working pipeline can be distinguished from navigation success.
 
-## Project objective
+**Current status:** real Habitat 0.3.3 scene/reset, measured 25cm/15° actions,
+and real TCP client/server/queue/Runner integration have passed. The showcase
+below uses a **Deterministic Fake Policy**, not a NaVIDA checkpoint. No learned
+navigation, paper reproduction or robot deployment is claimed.
 
-Connect an official NaVIDA visual-language navigation checkpoint to Habitat so that simulated RGB observations and natural-language instructions produce auditable, bounded atomic navigation actions. Separate the model process from the simulator to allow different Python/CUDA stacks, avoid privileged simulator observations in the model policy, and retain traceable episode-level artifacts.
+## Real simulation showcase
 
-This is an **AI/robotics systems integration project**, not a claim of having invented or trained NaVIDA, reproduced its official paper results, or deployed on a physical robot.
+![Real 640×480 Habitat RGB in skokloster-castle; fixed-action Fake Policy test](docs/assets/habitat-scene.png)
 
-## Architecture
+**[Watch the labelled 10.5-second Demo](docs/assets/engineering-demo.mp4)** ·
+[Actual pose data](docs/assets/showcase-poses.csv) · [Evidence](docs/assets/showcase-evidence.json)
 
-~~~text
-+------------------------ MODEL SERVICE ------------------------+
-| Python 3.10, GPU, official NaVIDA checkpoint (4-bit in tests) |
-| RGB frame history + instruction -> NaVIDA inference          |
-|      -> strict action-chunk parser -> atomic action queue     |
-| /health | /v1/episodes/start | /v1/steps (localhost HTTP)     |
-+-------------------------------+------------------------------+
-                                | JSON (RGB PNG/base64 request)
-                                | one simulator action / response
-+-------------------------------v------------------------------+
-| Habitat evaluator application (Python 3.9, historical stack) |
-| Fixed episode / scene / goal -> RGB observation              |
-| OfficialNaVIDAHTTPPolicy -> paper_pure action                |
-| Habitat env.step -> trajectory CSV / RGB frames / MP4        |
-| Offline goal metrics and Oracle comparison (NOT model input) |
-+--------------------------------------------------------------+
-                    |
-          External Meta Habitat-Lab / Habitat-Sim,
-          with separately licensed scenes and datasets
-~~~
+![Trajectory plotted from actual Habitat poses, not a planned path](docs/assets/habitat-trajectory.png)
 
-**Protocol boundaries:** paper_pure uses current RGB, up to 8 sampled historical RGB frames, and the navigation instruction. The model receives no target distance/bearing, ground-truth pose, depth, GPS, compass or top-down map. Valid model actions are not overridden. Invalid output is reported and the evaluator should terminate without random fallback. The parser accepts up to 3 sub-chunks and executes at most the first 2, with 25 cm / 15-degree atomic steps. This intentionally differs from some upstream evaluator fallback behavior: it is **not a byte-identical official evaluation reproduction**.
+One fixed start, one run: **21 actions, 21 HTTP requests, 11 fixed decisions,
+0 collisions and explicit STOP**, at 640×480. Two queued actions share their
+originating decision; every simulator step supplies a fresh real RGB frame.
+Playback is 2 fps; logical control is 1 Hz with wall-clock pacing disabled.
+These counts demonstrate execution and recording, not task-solving ability.
 
-## Engineering deliverables
+## Architecture and protocol
 
-| Component | Repository path | Evidence |
-| --- | --- | --- |
-| Strict parser, testable mock episode, JSONL trace | src/navida_habitat/action_chunk.py, episode_runner.py | [Personal PRs #1–2](https://github.com/sceneeeee/navida-habitat/pulls?q=is%3Apr+is%3Amerged) |
-| Official checkpoint runtime, RGB history, multi-decision CLI | src/navida_habitat/model_runtime.py, frame_history.py, navida_backend.py | [Personal PR #3](https://github.com/sceneeeee/navida-habitat/pull/3) |
-| Evaluator-facing Policy API and localhost HTTP server | src/navida_habitat/policy.py, http_service.py | [Personal PRs #5–6](https://github.com/sceneeeee/navida-habitat/pulls?q=is%3Apr+is%3Amerged) |
-| Habitat-side HTTP policy adapter, protocol validation, client tests | habitat_vln/policies/official_navida_http_policy.py | [SURF team repo PR #4, authored by sceneeeee](https://github.com/RtimesC/habitat-lab/pull/4) |
-| Grounded single-scene demo generator and runner | habitat_vln/data/create_grounded_demo_episode.py, demos/run_grounded_navida_demo.py | [SURF team repo PR #5, authored by sceneeeee](https://github.com/RtimesC/habitat-lab/pull/5) |
-| Reusable evaluator environment, controller, runner, scheduling, logs, media | habitat_vln/envs, core, control, runtime | Extracted from the SURF team framework; **not exclusively personal authorship** |
+![HTTP request, decision queue and execution flow; counts from the measured run](docs/assets/http-flow.svg)
 
-The personal model-side repository was implemented and maintained by the account owner with Codex assistance, with no separate human collaborator in that repository according to the owner's clarification. The extracted general evaluator framework was part of **RtimesC's SURF team repository**. Its history and contributors remain separately credited; see [provenance](docs/evaluator-provenance.md).
+| Process | Responsibilities | Environment |
+|---|---|---|
+| Model/service | Checkpoint runtime or explicit test policy; RGB history; strict parser; episode state and action queue | Python 3.10 |
+| Evaluator | Real Habitat RGB; lossless PNG/base64 HTTP client; unchanged valid actions; trajectory, metrics and media | Python 3.9, Habitat-Lab/Sim 0.3.3 |
 
-## Historical results — two different experiments
+`GET /health`, `POST /v1/episodes/start`, `POST /v1/steps` form the integration
+seam. Episode reset clears history/queue. Queue consumption preserves
+`decision_step` and sets `inferred=false`; only an empty queue requests another
+decision. The model receives RGB/history/instruction, never privileged target
+distance/bearing, simulator pose, depth, GPS or maps. `paper_pure` bypasses the
+controller: invalid output terminates without random/forward fallback or
+hidden Oracle/goal-distance STOP. Real checkpoint parsing selects at most two
+sub-chunks and expands 25cm/15° actions. The Fake Policy directly supplies fixed
+atomic actions and does not test learned inference or parser quality.
 
-| Evidence | Outcome | What it proves |
-| --- | --- | --- |
-| Model-side regression suite in [PR #6](https://github.com/sceneeeee/navida-habitat/pull/6) | 88 tests, 87 passed, one optional scene test skipped | Historical software regression, **not rerun here** |
-| Real NaVIDA checkpoint on RTX 4060 Ti 8 GB | 4-bit inference; about 3.12 GiB peak **allocated** GPU memory | Resource-adapted local inference, not sustained/total memory |
-| Five-step PointNav smoke, model service to Habitat | Five simulator steps with valid actions; instruction **not aligned** with random goal | Network/queue/simulator engineering connectivity, **not goal-directed navigation** |
-| Grounded test-scene demo in [team PR #5](https://github.com/RtimesC/habitat-lab/pull/5) | **80 simulator steps; NaVIDA STOP at wrong location; success=0.0, SPL=0.0, final goal distance ~8.620m** | Goal-grounded single-episode **model failure**, while execution/log/media path worked |
-| Separate Oracle control for the grounded demo | Oracle success=1.0, SPL=1.0 | Test episode/scene/metrics were executable; **this is not NaVIDA's result** |
+## What has actually been verified
 
-None of these runs is a standardized R2R VLN-CE/RxR benchmark or supports generalization claims. No Jetson, ROS 2, FrogBot or other physical robot validation was completed during SURF. Evidence: [validation report](docs/validation-report.md).
+| Evidence | Result | Boundary |
+|---|---|---|
+| Stage A | Real scene/navmesh/config/reset, RGB rendered through WSLg D3D12 | Local environment, no policy |
+| Stage B | Forward **0.249999864m**, turns ≈15°, double-left ≈30°, STOP ended episode | Real measured motion |
+| Stage C | Normal: 4 requests / 4 actions; invalid: 3 requests / **2 actions**, explicit failure | Real TCP and simulator; Fake Policy |
+| Showcase | 640×480, 21 actions, H.264, CSV/JSON/raw RGB, terminal pose | Fixed sequence, not navigation reasoning |
 
-## Quickstart — two processes, two environments
+Both Python suites and lightweight GitHub CI are run for this PR; CI itself
+uses fakes and does **not** launch Habitat or download scenes/checkpoints.
+[Demo guide](docs/engineering-demo.md) documents commands, versions, outputs and
+recording semantics. Selected small presentation derivatives are versioned;
+large raw recordings remain local/ignored.
 
-The personal model server uses **Python 3.10**. The migrated evaluator originally ran in a **separate Python 3.9 environment** with historical Habitat-Lab/Habitat-Sim. Do **not** force them into the same environment or assume the root pyproject.toml can install the evaluator into Python 3.9. Prepare simulator dependencies and legally obtained model/scene files separately.
+## Reproduce without a checkpoint
 
-**Terminal 1 — model server:**
+Use already prepared independent environments and legally obtained test assets.
+The scripts never install packages or download data automatically.
 
-~~~bash
-# Python 3.10 model environment; run from this repository's root
-export PYTHONPATH="$PWD/src"
-python scripts/run_official_navida_http_server.py \
-  --model-path /absolute/path/to/authorized/checkpoint \
-  --host 127.0.0.1 --port 8008
-~~~
+```bash
+PYTHONDONTWRITEBYTECODE=1 timeout 240s /usr/bin/python3.10 scripts/run_engineering_demo.py \
+  --habitat-python /home/evens/navida-stage-a/env/bin/python \
+  --scenes-dir /home/evens/navida-stage-a/data/habitat-test-scenes \
+  --output-dir outputs/engineering-demo
+```
 
-**Terminal 2 — historical Habitat evaluator environment (Python 3.9):**
+Replace paths and renderer device settings for another machine. The default
+21-action sequence is bounded by 24 steps and 180 seconds; `--case invalid`
+reproduces the failure path. No `/tmp` script is required. For authorized real
+checkpoint inference, see the [model/evaluator quickstart](habitat_vln/README.md).
+Do not install the Python 3.10 root package into the evaluator environment.
 
-~~~bash
-# Run from the same repository root after installing external Habitat dependencies
-python -m habitat_vln.demos.run_grounded_navida_demo \
-  --task-config benchmark/nav/pointnav/pointnav_hm3d.yaml \
-  --scenes-dir /absolute/path/to/habitat-test-scenes \
-  --official-navida-url http://127.0.0.1:8008 \
-  --official-navida-timeout 900 \
-  --gpu-device-id -1 --num-episodes 1 --max-steps 80 \
-  --no-rate-limit --output-dir outputs/grounded_navida_demo
-~~~
+```bash
+PYTHONPATH=src /usr/bin/python3.10 -m unittest discover -s tests -v
+/home/evens/navida-stage-a/env/bin/python -m unittest discover -s test -v
+```
 
-The demo creates a fixed single test episode locally if its default dataset does not yet exist, but requires the corresponding legal test scene/navmesh. The GPU device flag -1 is the historical WSLg workaround, not a universal setting. The exact task-config path and dependency versions must be verified against the installed historical Habitat-Lab environment. **These commands have not been replayed under the consolidated repository.**
+## Historical NaVIDA experiments are separate
 
-Read the [full evaluator setup and test guidance](habitat_vln/README.md) before running.
+The SURF project has concluded. Historical checkpoint integration worked, but
+its five-step PointNav smoke used an instruction unaligned with the random
+goal. The later [team PR #5](https://github.com/RtimesC/habitat-lab/pull/5)
+grounded test ran 80 real-checkpoint steps and stopped at the wrong location:
+**success=0, SPL=0, final distance ≈8.620m**. A separate Oracle succeeded;
+that is **not** NaVIDA success. Current Fake Policy media does not replace those
+results. Future checkpoint replay, R2R/RxR benchmarks and robot work remain
+separate, optional experiments.
 
-## Tests
+## Contribution and reuse
 
-~~~bash
-# Model environment (Python 3.10; mock and API regression)
-PYTHONPATH=src python -m unittest discover -s tests -v
+The personal model-side runtime, parser, history, Policy API and HTTP service
+were developed by sceneeeee/evenS with Codex assistance. Account-linked team
+PRs [#4](https://github.com/RtimesC/habitat-lab/pull/4) and
+[#5](https://github.com/RtimesC/habitat-lab/pull/5) added the evaluator HTTP
+adapter and grounded Demo. The general evaluator framework came from the
+**SURF team**, not solely the personal owner. The 35-file import is based on
+`RtimesC/habitat-lab@835ac41e`; original blob hashes and subsequent differences
+remain in the [manifest](docs/evaluator-source-manifest.json).
 
-# Lightweight model-server ↔ evaluator-client HTTP contract (fake model, no scene)
-PYTHONPATH=src python -m unittest discover -s tests -p 'test_evaluator_http_contract.py' -v
+[Meta's original MIT notice](third_party/habitat-lab-MIT.LICENSE) is preserved.
+No repository-wide license for personal model-side code has been selected.
+NaVIDA, Habitat, scenes and datasets retain their respective authors/terms.
+This repository does not redistribute weights, GLB/navmesh or datasets.
+See the [contribution audit](docs/contribution-audit.md) and
+[Chinese SURF closeout](docs/surf-closeout.zh-CN.md).
 
-# Evaluator environment (Python 3.9 with historical dependencies)
-python -m unittest discover -s test -p 'test_grounded_demo_episode.py' -v
-python -m unittest discover -s test -p 'test_official_navida_http.py' -v
-python -m unittest discover -s test -p 'test_grounded_navida_demo.py' -v
-~~~
+## Limits
 
-The new cross-process HTTP contract test uses a fake model policy and is **not** a real checkpoint or navigation benchmark. All tests listed here require actual execution after migration; no post-migration pass count is asserted. See the [acceptance checklist](docs/evaluator-migration-acceptance.md).
-
-## Repository map
-
-~~~text
-src/navida_habitat/   Model runtime, RGB history, strict parser, HTTP server
-scripts/              Model-side and mock CLI entrypoints
-tests/                Model-side regression and cross-repository HTTP contract
-habitat_vln/          SURF evaluator application extracted from team repository
-test/                 Historical evaluator-side tests from the SURF snapshot
-docs/                 Closeout, evidence, API contract, provenance, acceptance
-third_party/          Historical source license notice
-~~~
-
-Original detailed Chinese model-side README is retained at [docs/legacy-model-side-readme.zh-CN.md](docs/legacy-model-side-readme.zh-CN.md). This document is an archived reference, not the current project status.
-
-## Attribution, license and research integrity
-
-The evaluator application was extracted from [RtimesC/habitat-lab at the merge of PR #5](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6) (July 23, 2026). Its general-purpose framework came from the SURF team's codebase; the account owner also contributed specific evaluator adapter and grounded-demo modules through PRs #4 and #5. The extracted code is governed by the original MIT notice, preserved at [third_party/habitat-lab-MIT.LICENSE](third_party/habitat-lab-MIT.LICENSE). No repository-wide license for the personal model-side code has been selected; do not interpret the extracted-code notice as automatic relicensing of every file.
-
-Meta Habitat-Lab/Habitat-Sim are independent upstream software; NaVIDA model architecture/checkpoint belong to their original authors; datasets and scenes may have additional terms. This repository does not redistribute external weights, licensed scenes, results or videos.
-
-**The personal repository is a maintained derivative/integration of an original SURF team evaluator, not a claim to have solely authored the whole team project.** No formal benchmark or real robot experiment is implied by a historical integration or by this unverified migration.
+One scene and a fixed Fake Policy test establish engineering behavior, not
+generalization or navigation ability. CSV legacy pose/image are before-action,
+metrics are after-action; `state_timing` makes this explicit and episode JSON
+now records the final pose. Failed video generation reports a diagnostic;
+detailed codec errors remain a possible follow-up. Semantic scene annotations,
+real checkpoint replay and cross-platform rendering are not validated by this
+showcase. [Legacy model-side README](docs/legacy-model-side-readme.zh-CN.md) is
+retained as historical reference.

@@ -725,5 +725,28 @@ class GroundedDemoCliTest(unittest.TestCase):
         fake_env.close.assert_called_once_with()
 
 
+
+
+class GroundedArtifactSemanticsTest(unittest.TestCase):
+    def test_false_video_result_and_real_final_pose_are_explicit(self):
+        env = FakeDemoEnvironment()
+        env.sim.get_agent_state = mock.Mock(return_value=SimpleNamespace(
+            position=np.array([7., 8., 9.]),
+            rotation=SimpleNamespace(x=0., y=0., z=0., w=1.),
+        ))
+        policy = CapturingPaperPurePolicy([PolicyOutput('stop', 'stop', True)])
+        with tempfile.TemporaryDirectory() as output:
+            path = run_grounded_with_fakes(env, policy, grounded_runner_args(output))
+            summary = json.loads((Path(path).parent / 'episode_summary.json').read_text())
+            with open(path) as handle:
+                rows = list(csv.DictReader(handle))
+        self.assertFalse(summary['video_generated'])
+        self.assertIn('returned False', summary['video_error'])
+        self.assertEqual(summary['final_pose']['position'], [7., 8., 9.])
+        self.assertEqual(summary['final_pose_error'], '')
+        self.assertIn('pose_image_before_action', rows[0]['state_timing'])
+        self.assertFalse(summary['failed'])
+
+
 if __name__ == "__main__":
     unittest.main()

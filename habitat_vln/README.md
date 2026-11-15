@@ -102,3 +102,11 @@ CLI routes, default preservation, rejection of failed injection and invalid
 frequencies. It does not install or validate Habitat. CI also runs this bounded
 suite and triggers on `test/**`; it still does not run the Python 3.9 Habitat
 regressions. The separate real-Habitat acceptance gates remain open.
+
+## Verified engineering Demo
+
+The real post-import A/B/C checks and 640×480 fixed-action showcase now pass;
+see [reproduction/evidence](../docs/engineering-demo.md). These use an explicitly
+labelled Deterministic Fake Policy, not a live checkpoint. New repository
+scripts replace the former local-only audit scripts. Earlier July/initial-import
+sections above are historical; checkpoint replay remains unverified.

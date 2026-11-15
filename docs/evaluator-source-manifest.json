@@ -188,6 +188,10 @@
     "habitat_vln/envs/habitat_env.py",
     "habitat_vln/habitat_vln_nav.py",
     "habitat_vln/demos/run_grounded_navida_demo.py",
-    "habitat_vln/runtime/scheduler.py"
+    "habitat_vln/runtime/scheduler.py",
+    "habitat_vln/runtime/navigation_runner.py",
+    "habitat_vln/runtime/recorder.py",
+    "habitat_vln/runtime/grounded_demo_artifacts.py",
+    "test/test_grounded_navida_demo.py"
   ]
 }

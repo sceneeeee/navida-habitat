@@ -24,7 +24,11 @@ def write_grounded_demo_artifacts(
         handle.write("\n")
 
     with open(markdown_path, "w", encoding="utf-8") as handle:
-        handle.write("# Grounded Official NaVIDA demo\n\n")
+        fake = episode_summaries[0].get("policy_source") == "deterministic_fake_policy"
+        handle.write("# Deterministic Fake Policy engineering demo\n\n" if fake
+                     else "# Grounded Official NaVIDA demo\n\n")
+        if fake:
+            handle.write("Fixed actions, real Habitat and TCP HTTP; no NaVIDA inference.\n\n")
         handle.write(
             "This is a Habitat test-scene engineering demo. "
             "`benchmark_comparable=false`.\n\n"

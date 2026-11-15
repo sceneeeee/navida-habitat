@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="330" viewBox="0 0 1000 330">
+<rect width="1000" height="330" rx="16" fill="#102238"/>
+<g font-family="sans-serif" fill="white"><text x="30" y="42" font-size="22">Real Habitat + TCP HTTP · Deterministic Fake Policy</text>
+<text x="30" y="69" font-size="14" fill="#9dc5ef">Design diagram; counts below come from the recorded showcase. No NaVIDA checkpoint.</text>
+<g fill="#214567" stroke="#74b6ee"><rect x="30" y="102" width="205" height="110" rx="10"/>
+<rect x="270" y="102" width="205" height="110" rx="10"/><rect x="510" y="102" width="205" height="110" rx="10"/>
+<rect x="750" y="102" width="220" height="110" rx="10"/></g>
+<g font-size="17"><text x="45" y="132">Habitat · Python 3.9</text><text x="285" y="132">HTTP client → server</text>
+<text x="525" y="132">Server action queue</text><text x="765" y="132">Habitat Env.step</text></g>
+<g font-size="14"><text x="45" y="163">640×480 real RGB</text><text x="45" y="190">Instruction + step ID</text>
+<text x="285" y="163">Lossless PNG / JSON</text><text x="285" y="190">Python 3.10 service</text>
+<text x="525" y="163">d0: left, left</text><text x="525" y="190">inferred: true, false</text>
+<text x="765" y="163">Pose + RGB + metrics</text><text x="765" y="190">CSV / JSON / H.264</text></g>
+<g font-size="26"><text x="242" y="162">→</text><text x="482" y="162">→</text><text x="722" y="162">→</text></g>
+<text x="30" y="254" font-size="17">Observed: 21 requests → 11 fixed decisions → 21 actual actions → explicit STOP</text>
+<text x="30" y="286" font-size="14" fill="#9dc5ef">First four decision IDs: 0, 0, 1, 1 · RGB observed every step · no fallback</text></g></svg>
