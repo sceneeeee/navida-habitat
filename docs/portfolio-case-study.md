@@ -90,7 +90,7 @@ Do not attribute upstream NaVIDA model design, training, public checkpoint or th
 
 ## Post-SURF personal repository consolidation (2026-11)
 
-After the SURF project concluded, the personal repository extracted the relevant evaluator application and original tests from the [July 23 merged team snapshot](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6). The aim is **independent maintainability and credible portfolio demonstration**, not retroactively treating team framework code as individual SURF authorship. The extracted model/evaluator code now lives in one source repository but still runs as **two separately configured Python processes**. Source file hashes were checked after import; post-migration Habitat/GPU tests are **not yet run**. Attribution, licensing and acceptance gates are recorded in [evaluator provenance](evaluator-provenance.md) and [migration acceptance checklist](evaluator-migration-acceptance.md).
+After the SURF project concluded, the personal repository extracted the relevant evaluator application and original tests from the [July 23 merged team snapshot](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6). The aim is **independent maintainability and credible portfolio demonstration**, not retroactively treating team framework code as individual SURF authorship. The extracted model/evaluator code now lives in one source repository but still runs as **two separately configured Python processes**. The post-migration engineering path has since been executed in the verified local environments: Habitat 0.3.3 scene/reset and measured 25 cm/15° motion; real localhost TCP client/server and NavigationRunner with a Deterministic Fake Policy; normal and invalid-output cases; CSV/JSON/RGB/H.264 artifacts; and a 640×480, 21-action showcase. Final local suites reported Python 3.10: 98 passed, 1 skipped; Python 3.9 evaluator: 56 passed. These results verify software integration and deterministic execution, **not live NaVIDA inference or learned navigation**. Attribution, licensing and final acceptance are recorded in [evaluator provenance](evaluator-provenance.md) and [migration acceptance](evaluator-migration-acceptance.md).
 
 ## Reproducibility and further work
 
@@ -100,7 +100,7 @@ Standard-library regression command (requires dependencies already present):
 PYTHONPATH=src python -m unittest discover -s tests -v
 ~~~
 
-The full model/Habitat test additionally requires properly licensed scenes, model checkpoint, CUDA runtime and the paired evaluator. Running the command above does **not** reproduce the five-step real-model experiment.
+The deterministic Habitat engineering showcase is reproducible without a NaVIDA checkpoint, provided the separate Habitat environment and authorized test scene are installed. A live model replay additionally requires the authorized checkpoint, CUDA runtime and both processes. Running the deterministic showcase does **not** reproduce the historical five-step or 80-step real-model experiments.
 
 Post-SURF simulation evaluation or an authorized future FrogBot experiment would be **new work** and should be reported separately from the completed SURF deliverable.
 
