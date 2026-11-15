@@ -7,10 +7,7 @@ stateful HTTP interface while keeping incompatible model and simulator stacks
 in separate processes. Preserve every decision, executed action and terminal
 state so a working pipeline can be distinguished from navigation success.
 
-**Current status:** real Habitat 0.3.3 scene/reset, measured 25cm/15° actions,
-and real TCP client/server/queue/Runner integration have passed. The showcase
-below uses a **Deterministic Fake Policy**, not a NaVIDA checkpoint. No learned
-navigation, paper reproduction or robot deployment is claimed.
+**Project status: COMPLETED (2026-11-15) — software integration and deterministic Habitat engineering showcase.** Real Habitat 0.3.3 scene/reset, measured 25cm/15° actions, and real TCP client/server/queue/Runner integration have passed. The showcase below uses a **Deterministic Fake Policy**, not a NaVIDA checkpoint. No learned navigation, paper reproduction or robot deployment is claimed. Final acceptance: [docs/evaluator-migration-acceptance.md](docs/evaluator-migration-acceptance.md).
 
 ## Real simulation showcase
 
@@ -55,8 +52,7 @@ atomic actions and does not test learned inference or parser quality.
 | Stage C | Normal: 4 requests / 4 actions; invalid: 3 requests / **2 actions**, explicit failure | Real TCP and simulator; Fake Policy |
 | Showcase | 640×480, 21 actions, H.264, CSV/JSON/raw RGB, terminal pose | Fixed sequence, not navigation reasoning |
 
-Both Python suites and lightweight GitHub CI are run for this PR; CI itself
-uses fakes and does **not** launch Habitat or download scenes/checkpoints.
+Final local verification: Python 3.10 model-side suite **98 passed, 1 skipped**; Python 3.9 evaluator-side suite **56 passed**. GitHub CI also passed. CI uses fakes and does **not** launch Habitat or download scenes/checkpoints.
 [Demo guide](docs/engineering-demo.md) documents commands, versions, outputs and
 recording semantics. Selected small presentation derivatives are versioned;
 large raw recordings remain local/ignored.
@@ -67,9 +63,12 @@ Use already prepared independent environments and legally obtained test assets.
 The scripts never install packages or download data automatically.
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 timeout 240s /usr/bin/python3.10 scripts/run_engineering_demo.py \
-  --habitat-python /home/evens/navida-stage-a/env/bin/python \
-  --scenes-dir /home/evens/navida-stage-a/data/habitat-test-scenes \
+MODEL_PYTHON=/usr/bin/python3.10
+HABITAT_PYTHON=/path/to/habitat-env/bin/python
+SCENES_DIR=/path/to/habitat-test-scenes
+PYTHONDONTWRITEBYTECODE=1 timeout 240s "$MODEL_PYTHON" scripts/run_engineering_demo.py \
+  --habitat-python "$HABITAT_PYTHON" \
+  --scenes-dir "$SCENES_DIR" \
   --output-dir outputs/engineering-demo
 ```
 
@@ -80,8 +79,8 @@ checkpoint inference, see the [model/evaluator quickstart](habitat_vln/README.md
 Do not install the Python 3.10 root package into the evaluator environment.
 
 ```bash
-PYTHONPATH=src /usr/bin/python3.10 -m unittest discover -s tests -v
-/home/evens/navida-stage-a/env/bin/python -m unittest discover -s test -v
+PYTHONPATH=src "$MODEL_PYTHON" -m unittest discover -s tests -v
+"$HABITAT_PYTHON" -m unittest discover -s test -v
 ```
 
 ## Historical NaVIDA experiments are separate
