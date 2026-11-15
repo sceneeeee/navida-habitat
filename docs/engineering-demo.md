@@ -111,6 +111,4 @@ Missing semantic annotations and duplicate-importer warnings remain in raw logs;
 only RGB/PointNav behavior is validated. Real checkpoint re-evaluation and
 standard R2R/RxR or physical-robot validation remain outside this delivery.
 
-The local original run is `/home/evens/navida-stage-a/showcase/run_20261115T154012Z`.
-Its base was `2d99b01` plus this PR's recording/Demo changes; see the committed
-scripts and provenance record for the final implementation.
+The original raw run directory is retained locally outside the repository and is intentionally not versioned. The committed evidence JSON, pose CSV and selected presentation assets are derived from that single run; see the repository scripts and provenance record for the implementation.
