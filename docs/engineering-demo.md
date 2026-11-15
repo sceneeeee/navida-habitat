@@ -35,19 +35,22 @@ against the run, not a screenshot of runtime internals.
 
 ## Reproduce with existing dependencies and assets
 
-The service uses Python 3.10 with Pillow. The evaluator uses separate Python
+The service uses Python 3.10 with Pillow. The evaluator uses a separate Python
 3.9, Habitat-Lab/Sim 0.3.3, NumPy 1.26.4, OpenCV 4.10, Pillow 10.4,
 Hydra 1.3.2, OmegaConf 2.3 and quaternion 2023.0.4. Source baseline:
 SURF `835ac41e`. Keep the environments separate. No automatic installation,
 scene or checkpoint download occurs. Obtain authorized GLB/navmesh first.
 The original MIT and contributor record are in [provenance](evaluator-provenance.md).
 
-From this repository root, on the verified WSL machine:
+From this repository root, after setting the interpreter and scene paths for the target machine:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 timeout 240s /usr/bin/python3.10 scripts/run_engineering_demo.py \
-  --habitat-python /home/evens/navida-stage-a/env/bin/python \
-  --scenes-dir /home/evens/navida-stage-a/data/habitat-test-scenes \
+MODEL_PYTHON=/usr/bin/python3.10
+HABITAT_PYTHON=/path/to/habitat-env/bin/python
+SCENES_DIR=/path/to/habitat-test-scenes
+PYTHONDONTWRITEBYTECODE=1 timeout 240s "$MODEL_PYTHON" scripts/run_engineering_demo.py \
+  --habitat-python "$HABITAT_PYTHON" \
+  --scenes-dir "$SCENES_DIR" \
   --output-dir outputs/engineering-demo
 ```
 
@@ -70,7 +73,8 @@ Optional small-asset export (requires existing Matplotlib, ffmpeg/libx264 and
 ffprobe; never invokes a simulator):
 
 ```bash
-MPLCONFIGDIR=/tmp/navida-mpl /home/evens/navida-stage-a/env/bin/python \
+HABITAT_PYTHON=/path/to/habitat-env/bin/python
+MPLCONFIGDIR=/tmp/navida-mpl "$HABITAT_PYTHON" \
   scripts/export_engineering_demo.py --run-dir /absolute/path/printed/by/DEMO_RUN \
   --asset-dir docs/assets
 ```
