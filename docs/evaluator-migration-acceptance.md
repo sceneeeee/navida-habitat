@@ -16,13 +16,15 @@ The completed deliverable is a maintainable repository containing:
 - Two explicitly separate runtime environments: Python 3.10 model/service and Python 3.9 Habitat evaluator (Habitat-Lab/Sim 0.3.3).
 - Reproducible deterministic Fake Policy engineering demo, tests, bilingual README, source provenance and selected small presentation assets.
 
-The project is **not** a completed learned-navigation result, official VLN benchmark reproduction, production service or physical-robot deployment.
+The project is **not** a successful learned-navigation result, official VLN benchmark reproduction, production service or physical-robot deployment. This does **not** mean the original model was never run: the official NaVIDA-3B checkpoint was loaded and exercised during SURF, as recorded in [PR #6](https://github.com/sceneeeee/navida-habitat/pull/6) and [team evaluator PR #5](https://github.com/RtimesC/habitat-lab/pull/5).
 
 ## 2. Completed acceptance gates
 
 | Gate | Final evidence | Status |
 |---|---|---|
 | Historical source integrity | 35 imported files matched the frozen SURF source snapshot by Git blob SHA at initial import; subsequent changes are listed in the manifest/provenance | Passed |
+| Historical real-checkpoint integration | Official NaVIDA-3B loaded with 4-bit NF4 on RTX 4060 Ti 8GB; ≈3.12 GiB peak allocated VRAM; five-step real-model Habitat/HTTP smoke recorded in personal PR #6 | Passed as integration smoke |
+| Historical goal-grounded model run | Real checkpoint executed 80 steps in team Habitat PR #5; stopped at wrong location, success=0, SPL=0, final distance ≈8.620 m | Completed; navigation unsuccessful |
 | License and attribution | Original Habitat-Lab MIT notice preserved; team framework and account-linked PR #4/#5 contributions distinguished | Passed |
 | Python 3.10 model-side suite | 98 passed, 1 skipped, 0 failed in the final showcase run | Passed |
 | Python 3.9 evaluator-side suite | 56 passed, 0 failed in the final showcase run | Passed |
@@ -40,7 +42,7 @@ Exact commands, environment details and artifact semantics are documented in [en
 
 These items are **not merge blockers** for the completed software-integration project and must not be represented as completed achievements:
 
-- Replaying the NaVIDA checkpoint in the consolidated personal repository after migration.
+- Replaying the NaVIDA checkpoint in the consolidated personal repository after migration. The historical SURF checkpoint run did happen; only a fresh post-migration replay was not performed.
 - Successful language-grounded navigation. The historical 80-step NaVIDA episode stopped at the wrong location (success=0, SPL=0, final distance about 8.620 m); the separate Oracle result is not NaVIDA performance.
 - Standard R2R VLN-CE / RxR benchmark, held-out multi-scene evaluation or aggregate SR/SPL/NE/nDTW claims.
 - Jetson, ROS 2, FrogBot or other physical-robot deployment.
