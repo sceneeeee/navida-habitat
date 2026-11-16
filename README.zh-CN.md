@@ -6,11 +6,9 @@
 把 RGB 与指令转换为可审计的原子动作，并记录决策、真实执行和终态，
 使“链路可运行”和“导航任务成功”能够被分别判断。
 
-**项目状态：已结项（2026-11-15）——软件集成与确定性 Habitat 工程展示完成。** 已完成真实 Habitat 0.3.3 场景/reset、25cm/15°动作实测，以及真实 TCP 客户端、服务端队列、Habitat step 和 Runner 产物闭环。最终验收记录见 [docs/evaluator-migration-acceptance.md](docs/evaluator-migration-acceptance.md)。
-下面展示使用 **Deterministic Fake Policy（确定性固定动作策略）**，
-没有加载真实 NaVIDA，也不具备导航推理能力。
+**项目状态：已结项（2026-11-15）——真实 NaVIDA 模型集成与后续 Habitat 工程整合均已完成。** SURF 期间确实加载并运行过官方 NaVIDA-3B checkpoint：RTX 4060 Ti 8GB、4-bit NF4；完成五步真实模型联调，并在团队评估仓库完成一次80步目标对齐实验。该80步实验正常执行但未到达目标（success=0、SPL=0、最终距离约8.620m）。SURF 结束后，个人仓库迁移后的 Habitat 0.3.3 与 HTTP/Runner 链路使用 **Deterministic Fake Policy** 重新验收；下面的视频不是 NaVIDA 推理结果。项目没有声称成功的学习式导航、正式 VLN benchmark 或实机部署。最终验收见 [docs/evaluator-migration-acceptance.md](docs/evaluator-migration-acceptance.md)。
 
-## 真实仿真展示
+## 后续工程整合展示（Deterministic Fake Policy）
 
 ![skokloster-castle 真实640×480 RGB；Fake Policy工程测试](docs/assets/habitat-scene.png)
 
@@ -74,15 +72,17 @@ PYTHONPATH=src "$MODEL_PYTHON" -m unittest discover -s tests -v
 "$HABITAT_PYTHON" -m unittest discover -s test -v
 ```
 
-## 历史模型实验、贡献与局限
+## SURF期间的真实 NaVIDA 模型实验
 
-SURF已经结项。历史五步真实checkpoint联调的指令未与随机目标对齐，不能算导航成功。
-后来[团队PR #5](https://github.com/RtimesC/habitat-lab/pull/5)的目标对齐单场景实验执行80步，
-NaVIDA在错误位置STOP：**success=0、SPL=0、最终距离约8.620m**。
-独立Oracle成功不属于NaVIDA结果。本次Fake Policy展示不能替换这些历史结论；
-真实模型重放、标准R2R/RxR评测和实机验证均是未来可选工作。
+SURF 期间确实运行过官方 NaVIDA-3B checkpoint，而不是只使用 Fake Policy。个人仓库 [PR #6](https://github.com/sceneeeee/navida-habitat/pull/6) 记录了 RTX 4060 Ti 8GB 上的 4-bit NF4 加载与推理，peak allocated GPU memory 约 3.12 GiB；同时完成了五步真实模型 Habitat/HTTP smoke test。该 smoke test 的手动指令与随机 PointNav 目标不匹配，因此证明真实推理与工程连通性，不证明导航成功。
 
-个人模型端的runtime、parser、历史帧、Policy API和HTTP由sceneeeee/evenS与Codex辅助开发。
+随后团队评估仓库的[PR #5](https://github.com/RtimesC/habitat-lab/pull/5)记录了一次80步目标对齐真实模型 episode。NaVIDA 输出合法动作并完成执行，但在错误位置 STOP：**success=0、SPL=0、最终目标距离约8.620m**。独立 Oracle 的成功结果只验证场景和评估流程，不属于 NaVIDA 成绩。
+
+## 后续工程整合展示（Fake Policy）
+
+11月迁移后的个人仓库没有重新加载旧 checkpoint。后续真实 Habitat 0.3.3、HTTP Client/Server、NavigationRunner 和媒体链路验收使用 Deterministic Fake Policy。该展示验证的是软件工程执行，不是模型推理。当前本地 checkpoint 已随旧环境清理而不在已验证环境中；未来重新获取授权权重并重放属于可选后续实验。标准 R2R/RxR benchmark 和实机验证也未完成。
+
+个人模型端的runtime、parser、历史帧、Policy API和HTTP由sceneeeee/evenS与Codex辅助开发。SURF期间真实checkpoint加载与推理的历史证据见上文及个人仓库PR #6；
 该账号在团队PR #4/#5中贡献了评估HTTP适配器及grounded Demo；
 通用runner/controller/environment框架来自**SURF团队**，不能全部视为个人原创。
 35文件初始快照为 `835ac41e`，原始SHA与下游改动均保留在
