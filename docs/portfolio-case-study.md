@@ -1,7 +1,7 @@
 # SURF Project Case Study — NaVIDA–Habitat Integration
 
-**Project type:** Team research / robotics AI systems engineering (SURF)  
-**Status:** SURF concluded; integration validated, one goal-grounded single-scene experiment completed with a negative navigation result; formal VLN benchmark not completed  
+**Project type:** Team research / robotics AI systems engineering (SURF), followed by post-SURF personal-repository engineering consolidation  
+**Status:** Official NaVIDA-3B checkpoint was genuinely loaded and evaluated during SURF; one goal-grounded single-scene episode completed with a negative navigation result. The later migrated-repository showcase used Deterministic Fake Policy. Formal VLN benchmark not completed  
 **Repository:** [sceneeeee/navida-habitat](https://github.com/sceneeeee/navida-habitat)  
 **Evaluator-side integration:** [RtimesC/habitat-lab](https://github.com/RtimesC/habitat-lab)
 
@@ -60,6 +60,9 @@ The parser is intentionally stricter than some behaviors of the upstream evaluat
 
 ## Evidence and results
 
+The project has **two separate evidence phases**. First, during SURF, the official NaVIDA-3B checkpoint was loaded and run through the real model/HTTP/Habitat integration. Second, after SURF, the personal repository was consolidated and revalidated with a deterministic Fake Policy to isolate and verify the software execution path. The Fake Policy showcase is not the only model evidence in this project, and it must not be confused with the historical real-checkpoint runs.
+
+
 **The SURF model/experiment figures below are historical repository/PR evidence, not remeasured for this case study.** The separately dated post-SURF engineering validation is described in its own section.
 
 - **Automated regression suite:** 88 tests run; 87 passed and one optional real-scene integration test skipped (recorded in PR #6).
@@ -89,6 +92,9 @@ Do not attribute upstream NaVIDA model design, training, public checkpoint or th
 - License permissions must be checked separately for the model, upstream code, third-party simulation frameworks and this repository; no root repository LICENSE has been selected.
 
 ## Post-SURF personal repository consolidation (2026-11)
+
+**Important:** the November 2026 640×480 showcase used a deterministic Fake Policy. It revalidated the migrated Habitat/HTTP/Runner software, not NaVIDA checkpoint inference. The original SURF checkpoint experiments remain valid historical evidence and are documented above; the old local checkpoint cache was not restored for this post-SURF run.
+
 
 After the SURF project concluded, the personal repository extracted the relevant evaluator application and original tests from the [July 23 merged team snapshot](https://github.com/RtimesC/habitat-lab/tree/835ac41e9ecf82c2c13b4bdf2f6747aef70860d6). The aim is **independent maintainability and credible portfolio demonstration**, not retroactively treating team framework code as individual SURF authorship. The extracted model/evaluator code now lives in one source repository but still runs as **two separately configured Python processes**. The post-migration engineering path has since been executed in the verified local environments: Habitat 0.3.3 scene/reset and measured 25 cm/15° motion; real localhost TCP client/server and NavigationRunner with a Deterministic Fake Policy; normal and invalid-output cases; CSV/JSON/RGB/H.264 artifacts; and a 640×480, 21-action showcase. Final local suites reported Python 3.10: 98 passed, 1 skipped; Python 3.9 evaluator: 56 passed. These results verify software integration and deterministic execution, **not live NaVIDA inference or learned navigation**. Attribution, licensing and final acceptance are recorded in [evaluator provenance](evaluator-provenance.md) and [migration acceptance](evaluator-migration-acceptance.md).
 
